@@ -1,0 +1,1777 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QRUIT — Channels</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════ TOKENS ═══════════════════════ */
+:root {
+  /* ── Dark theme (default) ── */
+  --bg:        #080C18;
+  --bg2:       #0D1224;
+  --card:      #0F1628;
+  --card2:     #152040;
+  --panel:     #0F1628;
+  --border:    #1E2D4A;
+  --border1:   #1E2D4A;
+  --border2:   #253550;
+  --cyan:      #00C8F0;
+  --cyan-dim:  rgba(0,200,240,0.12);
+  --cyan-glow: rgba(0,200,240,0.25);
+  --violet:    #7B61FF;
+  --violet-dim:rgba(123,97,255,0.12);
+  --green:     #00D48A;
+  --green-dim: rgba(0,212,138,0.12);
+  --amber:     #F0A030;
+  --amber-dim: rgba(240,160,48,0.12);
+  --red:       #F05060;
+  --red-dim:   rgba(240,80,96,0.12);
+  --t1:        #E8EEFF;
+  --t2:        #8090B8;
+  --t3:        #4A5880;
+  --fg1:       #E8EEFF;
+  --fg2:       #8090B8;
+  --fg3:       #4A5880;
+  --sidebar-w: 240px;
+  --live-h:    48px;
+  --radius:    10px;
+  --radius-sm: 6px;
+  --f-display: 'Space Grotesk', sans-serif;
+  --f-body:    'Inter', sans-serif;
+  --f-mono:    'JetBrains Mono', monospace;
+}
+
+/* ── Light theme ─────────────────────────────────────────────────── */
+html[data-theme="light"] {
+  --bg:        #EEF3FA;
+  --bg2:       #FFFFFF;
+  --card:      #FFFFFF;
+  --card2:     #F4F8FE;
+  --panel:     #FFFFFF;
+  --border:    #D0DCF0;
+  --border1:   #D8E4F2;
+  --border2:   #C0CEDF;
+  --cyan:      #0098BA;
+  --cyan-dim:  rgba(0,152,186,0.09);
+  --cyan-glow: rgba(0,152,186,0.20);
+  --violet:    #5A44E0;
+  --violet-dim:rgba(90,68,224,0.09);
+  --green:     #00916A;
+  --green-dim: rgba(0,145,106,0.09);
+  --amber:     #B06800;
+  --amber-dim: rgba(176,104,0,0.09);
+  --red:       #C8303E;
+  --red-dim:   rgba(200,48,62,0.09);
+  --t1:        #0B1D3A;
+  --t2:        #2E4B70;
+  --t3:        #6B84A0;
+  --fg1:       #0B1D3A;
+  --fg2:       #2E4B70;
+  --fg3:       #6B84A0;
+}
+
+/* ── Light-specific structural overrides ─────────────────────────── */
+html[data-theme="light"] body { background: var(--bg); }
+
+html[data-theme="light"] .sidebar {
+  background: #FFFFFF;
+  border-right-color: var(--border1);
+  box-shadow: 2px 0 12px rgba(0,0,0,.06);
+}
+html[data-theme="light"] .sidebar-nav-item:hover { background: #F0F5FC; }
+html[data-theme="light"] .sidebar-nav-item.active { background: rgba(0,152,186,.09); }
+html[data-theme="light"] .sidebar-section-label { color: var(--fg3); }
+html[data-theme="light"] .sidebar-user {
+  background: #F4F8FE;
+  border-top-color: var(--border1);
+}
+
+html[data-theme="light"] .live-bar {
+  background: #FFFFFF;
+  border-bottom-color: var(--border1);
+  box-shadow: 0 2px 8px rgba(0,0,0,.06);
+}
+
+html[data-theme="light"] .main { background: var(--bg); }
+
+html[data-theme="light"] .kpi-card,
+html[data-theme="light"] .job-card,
+html[data-theme="light"] .report-card,
+html[data-theme="light"] .channel-section,
+html[data-theme="light"] .st-panel,
+html[data-theme="light"] .pool-card,
+html[data-theme="light"] .acm-modal,
+html[data-theme="light"] .cdp-panel,
+html[data-theme="light"] .tpp-panel {
+  background: #FFFFFF;
+  border-color: var(--border1);
+  box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+
+html[data-theme="light"] .btn-ghost {
+  border-color: var(--border2);
+  color: var(--fg2);
+}
+html[data-theme="light"] .btn-ghost:hover { background: #F0F5FC; color: var(--fg1); }
+
+html[data-theme="light"] .modal,
+html[data-theme="light"] .acm-modal {
+  box-shadow: 0 24px 60px rgba(0,0,0,.18);
+}
+
+html[data-theme="light"] input,
+html[data-theme="light"] select,
+html[data-theme="light"] textarea {
+  background: #F8FAFD;
+  border-color: var(--border2);
+  color: var(--fg1);
+}
+html[data-theme="light"] input:focus,
+html[data-theme="light"] select:focus,
+html[data-theme="light"] textarea:focus { border-color: var(--cyan); }
+
+html[data-theme="light"] .mobile-nav {
+  background: #FFFFFF;
+  border-top-color: var(--border1);
+  box-shadow: 0 -2px 12px rgba(0,0,0,.06);
+}
+html[data-theme="light"] .mob-more-sheet { background: #FFFFFF; border-top-color: var(--border1); }
+html[data-theme="light"] .mob-sheet-item:hover { background: #F0F5FC; }
+
+html[data-theme="light"] .acm-overlay { background: rgba(20,40,80,.55); }
+html[data-theme="light"] .acm-body { background: #FFFFFF; }
+html[data-theme="light"] .acm-header { background: #FFFFFF; border-bottom-color: var(--border1); }
+html[data-theme="light"] .acm-footer { background: #FFFFFF; border-top-color: var(--border1); }
+html[data-theme="light"] .acm-type-tile { background: #F8FAFD; }
+html[data-theme="light"] .acm-type-tile:hover { background: #EFF4FB; }
+html[data-theme="light"] .acm-type-tile.sel { background: rgba(0,152,186,.06); }
+html[data-theme="light"] .acm-pc { background: #F8FAFD; }
+html[data-theme="light"] .acm-folder-box { background: #F8FAFD; }
+html[data-theme="light"] .acm-folder-item:hover { background: #EFF4FB; }
+html[data-theme="light"] .acm-inp,
+html[data-theme="light"] .acm-select { background: #F8FAFD; }
+html[data-theme="light"] .acm-test-list { background: transparent; }
+html[data-theme="light"] .acm-preview-card { background: #F4F8FE; border-color: var(--border1); }
+html[data-theme="light"] .acm-done-card { background: #F4F8FE; border-color: var(--border1); }
+
+html[data-theme="light"] .cdp-overlay,
+html[data-theme="light"] .tpp-overlay { background: rgba(20,40,80,.55); }
+
+html[data-theme="light"] ::-webkit-scrollbar-track { background: #EEF3FA; }
+html[data-theme="light"] ::-webkit-scrollbar-thumb { background: #C0CEDF; }
+
+/* ═══════════════════════ RESET ═══════════════════════ */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; overflow: hidden; }
+body { background: var(--bg); color: var(--t1); font-family: var(--f-body); font-size: 14px; line-height: 1.5; }
+button { cursor: pointer; border: none; background: none; font: inherit; color: inherit; }
+input, select { font: inherit; color: inherit; }
+ul { list-style: none; }
+a { text-decoration: none; color: inherit; }
+svg { display: block; flex-shrink: 0; }
+
+/* ═══════════════════════ SCROLLBAR ═══════════════════════ */
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+/* ═══════════════════════ MAIN ═══════════════════════ */
+.main {
+  grid-area: main;
+  overflow-y: auto;
+  background: var(--bg);
+}
+.view { display: none; }
+.view.active { display: block; }
+
+/* ═══════════════════════ PAGE HEADER ═══════════════════════ */
+.page-header {
+  padding: 24px 28px 0;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+.page-title {
+  font-family: var(--f-display);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--t1);
+  line-height: 1.2;
+}
+.page-sub {
+  font-size: 13px;
+  color: var(--t2);
+  margin-top: 4px;
+}
+.header-actions { display: flex; gap: 8px; align-items: center; }
+
+/* ═══════════════════════ BUTTONS ═══════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  font-family: var(--f-body);
+  transition: all 0.15s;
+  cursor: pointer;
+  border: none;
+}
+.btn-primary {
+  background: var(--cyan);
+  color: #000;
+}
+.btn-primary:hover { background: #00dcff; box-shadow: 0 0 16px var(--cyan-glow); }
+.btn-ghost {
+  background: var(--card2);
+  color: var(--t2);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--t1); border-color: var(--border2); }
+.btn-sm { padding: 5px 10px; font-size: 12px; }
+
+/* ══════════════════════════════════════
+   CHANNELS VIEW
+   ══════════════════════════════════════ */
+
+/* Health summary bar */
+.chn-health {
+  display:flex; align-items:center; gap:0;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius); padding:14px 20px;
+  margin:0 28px 24px; flex-wrap:wrap; gap:0;
+}
+.chn-health-stat {
+  display:flex; flex-direction:column; align-items:center;
+  gap:2px; flex:1; min-width:80px;
+  padding:4px 16px; border-right:1px solid var(--border);
+}
+.chn-health-stat:last-child { border-right:none; }
+.chn-health-val {
+  font-family:var(--f-display); font-size:22px;
+  font-weight:700; color:var(--t1); line-height:1;
+}
+.chn-health-val.green { color:var(--green); }
+.chn-health-val.amber { color:var(--amber); }
+.chn-health-val.red   { color:var(--red); }
+.chn-health-key { font-size:11px; color:var(--t3); text-align:center; }
+.chn-health-sync {
+  font-family:var(--f-mono); font-size:11px;
+  color:var(--t3); margin-left:auto; padding-left:20px;
+  display:flex; align-items:center; gap:6px; flex-shrink:0;
+}
+.chn-sync-dot {
+  width:7px; height:7px; border-radius:50%;
+  background:var(--green); animation:pulse 2s ease-in-out infinite;
+}
+
+/* Section */
+.chn-section { padding:0 28px 32px; }
+.chn-section-hdr {
+  display:flex; align-items:center; justify-content:space-between;
+  margin-bottom:14px; gap:10px;
+}
+.chn-section-title {
+  font-family:var(--f-display); font-size:14px;
+  font-weight:600; color:var(--t1);
+}
+.chn-section-sub { font-size:12px; color:var(--t3); margin-top:1px; }
+.chn-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill, minmax(320px,1fr));
+  gap:12px;
+}
+.chn-grid-3 { grid-template-columns:repeat(auto-fill, minmax(240px,1fr)); }
+.chn-grid-4 { grid-template-columns:repeat(auto-fill, minmax(200px,1fr)); }
+
+/* Channel card */
+.chn-card {
+  background:var(--card); border:1px solid var(--border);
+  border-left:3px solid var(--border);
+  border-radius:var(--radius); padding:16px 18px;
+  display:flex; flex-direction:column; gap:12px;
+  transition:border-color 0.18s, box-shadow 0.18s;
+  position:relative;
+}
+.chn-card:hover { border-color:var(--border2); }
+.chn-card.chn-connected  { border-left-color:#059669; }
+.chn-card.chn-error      { border-left-color:var(--red); }
+.chn-card.chn-warning    { border-left-color:var(--amber); }
+.chn-card.chn-off        { border-left-color:var(--border); opacity:0.7; }
+
+/* Card top row */
+.chn-top {
+  display:flex; align-items:flex-start; gap:10px;
+}
+.chn-svc-icon {
+  width:36px; height:36px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; flex-shrink:0; font-weight:700;
+  color:white;
+}
+.chn-svc-info { flex:1; min-width:0; }
+.chn-svc-name {
+  font-family:var(--f-display); font-size:14px;
+  font-weight:700; color:var(--t1); line-height:1.2;
+}
+.chn-svc-cat { font-size:11px; color:var(--t3); margin-top:2px; }
+.chn-toggle-wrap { flex-shrink:0; margin-top:2px; }
+
+/* CSS toggle switch */
+.chn-sw { position:relative; width:36px; height:20px; flex-shrink:0; }
+.chn-sw input { opacity:0; width:0; height:0; position:absolute; }
+.chn-sw-slider {
+  position:absolute; inset:0;
+  background:var(--border2); border-radius:20px;
+  cursor:pointer; transition:background 0.2s;
+}
+.chn-sw-slider::before {
+  content:''; position:absolute;
+  width:14px; height:14px; left:3px; bottom:3px;
+  background:white; border-radius:50%;
+  transition:transform 0.2s;
+}
+.chn-sw input:checked + .chn-sw-slider { background:var(--green); }
+.chn-sw input:checked + .chn-sw-slider::before { transform:translateX(16px); }
+
+/* Status pill */
+.chn-status {
+  display:inline-flex; align-items:center; gap:5px;
+  font-family:var(--f-mono); font-size:10px; font-weight:600;
+  padding:3px 8px; border-radius:4px; letter-spacing:0.05em;
+}
+.chn-status.st-connected { background:var(--green-dim); color:var(--green); }
+.chn-status.st-error     { background:var(--red-dim);   color:var(--red);   }
+.chn-status.st-warning   { background:var(--amber-dim); color:var(--amber); }
+.chn-status.st-off       { background:var(--card2);     color:var(--t3);    }
+.chn-status-dot { width:5px; height:5px; border-radius:50%; background:currentColor; }
+
+/* Account row */
+.chn-account {
+  display:flex; align-items:center; gap:7px;
+  font-size:12px; color:var(--t2); font-weight:500;
+  background:var(--bg2); padding:7px 10px;
+  border-radius:var(--radius-sm); border:1px solid var(--border);
+}
+.chn-account svg { flex-shrink:0; color:var(--t3); }
+
+/* Monitor chips */
+.chn-monitors-label {
+  font-size:10px; font-family:var(--f-mono);
+  font-weight:500; letter-spacing:0.1em;
+  text-transform:uppercase; color:var(--t3); margin-bottom:6px;
+}
+.chn-monitor-chips { display:flex; flex-wrap:wrap; gap:5px; }
+.chn-mchip {
+  font-size:10px; font-weight:500;
+  padding:2px 7px; border-radius:3px;
+  background:var(--card2); color:var(--t2);
+  border:1px solid var(--border);
+}
+
+/* Sync info */
+.chn-sync {
+  display:flex; align-items:center; justify-content:space-between;
+  font-family:var(--f-mono); font-size:10px; color:var(--t3);
+}
+.chn-sync-method { color:var(--t2); }
+
+/* Folder chips */
+.chn-folders { display:flex; flex-direction:column; gap:6px; }
+.chn-folder-chip {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 9px; background:var(--bg2);
+  border:1px solid var(--border); border-radius:var(--radius-sm);
+  font-family:var(--f-mono); font-size:11px; color:var(--t2);
+}
+.chn-folder-chip svg { flex-shrink:0; color:var(--t3); }
+.chn-folder-chip .chn-folder-rm {
+  margin-left:auto; color:var(--t3); cursor:pointer;
+  padding:0 2px; transition:color 0.15s; font-size:13px;
+  line-height:1; background:none; border:none;
+}
+.chn-folder-chip .chn-folder-rm:hover { color:var(--red); }
+.chn-add-folder {
+  font-size:12px; color:var(--t3); cursor:pointer;
+  display:flex; align-items:center; gap:5px;
+  padding:4px 2px; transition:color 0.15s;
+  background:none; border:none; font-family:var(--f-body);
+}
+.chn-add-folder:hover { color:var(--cyan); }
+
+/* Card actions */
+.chn-actions {
+  display:flex; gap:6px; padding-top:4px;
+  border-top:1px solid var(--border);
+}
+.chn-actions .btn { flex:1; font-size:11px; padding:5px 8px; justify-content:center; }
+
+/* Connect CTA (disconnected state) */
+.chn-connect-cta {
+  display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:10px; padding:12px 0;
+  text-align:center;
+}
+.chn-connect-cta p { font-size:12px; color:var(--t3); max-width:180px; line-height:1.5; }
+
+/* Credit bar (LinkedIn etc.) */
+.chn-credit-bar { }
+.chn-credit-label {
+  display:flex; justify-content:space-between;
+  font-size:11px; color:var(--t3); margin-bottom:5px;
+}
+.chn-credit-label span { font-family:var(--f-mono); color:var(--t2); }
+.chn-credit-track {
+  height:5px; background:var(--border); border-radius:3px; overflow:hidden;
+}
+.chn-credit-fill { height:100%; border-radius:3px; background:var(--cyan); }
+.chn-credit-fill.warn { background:var(--amber); }
+.chn-credit-fill.low  { background:var(--red); }
+
+/* Notification preference rows */
+.chn-notif-grid { display:flex; flex-direction:column; gap:8px; }
+.chn-notif-row {
+  display:flex; align-items:center; gap:14px;
+  padding:12px 16px;
+  background:var(--card); border:1px solid var(--border);
+  border-radius:var(--radius-sm); transition:border-color 0.15s;
+}
+.chn-notif-row:hover { border-color:var(--border2); }
+.chn-notif-icon {
+  width:32px; height:32px; border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.chn-notif-info { flex:1; }
+.chn-notif-name { font-size:13px; font-weight:500; color:var(--t1); }
+.chn-notif-sub  { font-size:11px; color:var(--t3); margin-top:1px; }
+.chn-notif-row .chn-sw { flex-shrink:0; }
+
+/* Sourcing compact card */
+.src-card {
+  background:var(--card); border:1px solid var(--border);
+  border-left:3px solid var(--border);
+  border-radius:var(--radius); padding:14px 16px;
+  display:flex; flex-direction:column; gap:10px;
+  transition:all 0.18s;
+}
+.src-card:hover { border-color:var(--border2); }
+.src-card.src-connected { border-left-color:var(--green); }
+.src-top {
+  display:flex; align-items:center; gap:10px;
+}
+.src-icon {
+  width:32px; height:32px; border-radius:7px;
+  display:flex; align-items:center; justify-content:center;
+  font-size:14px; font-weight:700; color:white; flex-shrink:0;
+}
+.src-name { font-family:var(--f-display); font-size:13px; font-weight:700; color:var(--t1); }
+.src-cat  { font-size:10px; color:var(--t3); }
+.src-actions { display:flex; gap:6px; }
+.src-actions .btn { flex:1; font-size:11px; padding:5px 8px; justify-content:center; }
+
+@media (max-width:820px) {
+  .chn-health { margin:0 16px 16px; }
+  .chn-section { padding:0 16px 24px; }
+  .chn-grid, .chn-grid-3, .chn-grid-4 { grid-template-columns:1fr; }
+  .chn-health-stat { padding:4px 10px; }
+}
+
+
+/* ══════════════════════════════════════
+   ADD CHANNEL MODAL
+   ══════════════════════════════════════ */
+/* ═══════════════════════════════════════════════════════
+   ADD CHANNEL MODAL  — two-pane redesign
+═══════════════════════════════════════════════════════ */
+/* ═══ ADD CHANNEL WIZARD ═══════════════════════════════ */
+/* ═══ ADD CHANNEL WIZARD ═════════════════════════════════════════════ */
+.acm-overlay{position:fixed;inset:0;z-index:500;background:rgba(4,7,18,.76);backdrop-filter:blur(7px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .22s}
+.acm-overlay.acm-open{opacity:1;pointer-events:all}
+.acm-modal{width:min(740px,95vw);background:var(--panel);border:1px solid var(--border2);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 32px 90px rgba(0,0,0,.65);transform:translateY(18px) scale(.97);transition:transform .26s cubic-bezier(.22,1,.36,1);max-height:92vh}
+.acm-overlay.acm-open .acm-modal{transform:none}
+
+/* header */
+.acm-header{padding:22px 24px 16px;border-bottom:1px solid var(--border1);flex-shrink:0}
+.acm-hdr-row{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px}
+.acm-title{font-family:var(--f-display);font-size:17px;font-weight:700;color:var(--fg1)}
+.acm-sub{font-size:11.5px;color:var(--fg3);margin-top:3px;max-width:480px}
+.acm-xbtn{width:30px;height:30px;border-radius:8px;cursor:pointer;display:flex;align-items:center;justify-content:center;color:var(--fg3);flex-shrink:0;transition:background .14s,color .14s}
+.acm-xbtn:hover{background:var(--border2);color:var(--fg1)}
+
+/* step rail */
+.acm-rail{display:flex;align-items:center}
+.acm-si{display:flex;align-items:center;gap:6px;font-size:11px;color:var(--fg3);white-space:nowrap}
+.acm-si.done{color:var(--green)}
+.acm-si.active{color:var(--cyan)}
+.acm-snum{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;flex-shrink:0;transition:background .2s,border-color .2s}
+.acm-si.done .acm-snum{background:var(--green);border-color:var(--green);color:#000}
+.acm-si.active .acm-snum{background:rgba(0,200,240,.12);border-color:var(--cyan)}
+.acm-ssep{flex:1;min-width:12px;max-width:32px;height:1px;background:var(--border2);margin:0 3px}
+
+/* body */
+.acm-body{flex:1;overflow-y:auto;padding:24px}
+.acm-body::-webkit-scrollbar{width:4px}
+.acm-body::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+.acm-pane{display:none;animation:acmFadeIn .18s ease}
+.acm-pane.active{display:block}
+@keyframes acmFadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* footer */
+.acm-footer{padding:14px 24px;border-top:1px solid var(--border1);display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+
+/* back row */
+.acm-back{display:flex;align-items:center;gap:6px;font-size:12px;font-weight:500;color:var(--fg3);cursor:pointer;margin-bottom:20px;width:fit-content;user-select:none}
+.acm-back:hover{color:var(--fg1)}
+
+/* ── Step 1: type tiles ── */
+.acm-type-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.acm-type-tile{border:1.5px solid var(--border1);border-radius:12px;padding:18px 16px;cursor:pointer;transition:border-color .15s,background .15s;display:flex;flex-direction:column;gap:10px;position:relative}
+.acm-type-tile:hover{border-color:var(--border2);background:rgba(255,255,255,.02)}
+.acm-type-tile.sel{border-color:var(--cyan);background:rgba(0,200,240,.04);box-shadow:inset 0 0 0 1px var(--cyan)}
+.acm-tile-ico{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:19px}
+.acm-tile-n{font-size:13px;font-weight:700;color:var(--fg1)}
+.acm-tile-d{font-size:11px;color:var(--fg3);line-height:1.5}
+.acm-tile-cnt{position:absolute;top:11px;right:11px;font-size:10px;font-weight:600;background:var(--border2);color:var(--fg3);padding:2px 7px;border-radius:10px}
+
+/* ── Step 2: providers ── */
+.acm-prov-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:9px}
+.acm-pc{border:1.5px solid var(--border1);border-radius:11px;padding:13px 14px;cursor:pointer;transition:border-color .14s;display:flex;align-items:center;gap:11px}
+.acm-pc:hover:not(.soon){border-color:var(--border2)}
+.acm-pc.sel{border-color:var(--cyan);background:rgba(0,200,240,.04)}
+.acm-pc.soon{opacity:.45;cursor:not-allowed}
+.acm-pico{width:38px;height:38px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;flex-shrink:0}
+.acm-pname{font-size:13px;font-weight:600;color:var(--fg1)}
+.acm-pauth{font-size:10.5px;color:var(--fg3);margin-top:2px}
+.acm-pbadge{margin-left:auto;font-size:10px;font-weight:600;padding:2px 7px;border-radius:10px;flex-shrink:0}
+.pb-soon{background:rgba(123,97,255,.12);color:var(--violet)}
+.pb-avail{background:rgba(0,212,138,.1);color:var(--green)}
+
+/* ── Step 3: authorize ── */
+.acm-prov-bar{display:flex;align-items:center;gap:12px;padding:13px;background:var(--bg);border:1px solid var(--border1);border-radius:10px;margin-bottom:20px}
+.acm-prov-bar-name{font-size:14px;font-weight:700;color:var(--fg1)}
+.acm-prov-bar-sub{font-size:11px;color:var(--fg3);margin-top:2px}
+.acm-sec-lbl{font-size:11px;font-weight:700;color:var(--fg3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px}
+.acm-field{margin-bottom:13px}
+.acm-lbl{font-size:11.5px;font-weight:600;color:var(--fg2);margin-bottom:5px}
+.acm-lbl em{font-style:normal;font-weight:400;font-size:10.5px;color:var(--fg3);margin-left:4px}
+.acm-inp{width:100%;height:36px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 11px;font-size:13px;color:var(--fg1);outline:none;box-sizing:border-box;transition:border-color .14s}
+.acm-inp:focus{border-color:var(--cyan)}
+.acm-inp::placeholder{color:var(--fg3)}
+.acm-hint{font-size:10.5px;color:var(--fg3);margin-top:4px}
+.acm-oauth-btn{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;height:42px;border-radius:10px;border:1.5px solid var(--border2);background:var(--bg);color:var(--fg1);font-size:13px;font-weight:600;cursor:pointer;transition:border-color .14s,background .14s;margin-bottom:10px}
+.acm-oauth-btn:hover{border-color:var(--cyan);background:rgba(0,200,240,.04)}
+.acm-oico{width:22px;height:22px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:#fff;flex-shrink:0}
+.acm-sep{height:1px;background:var(--border1);margin:18px 0}
+.acm-dl-box{background:var(--bg);border:1px solid var(--border1);border-radius:10px;padding:14px;display:flex;flex-direction:column;gap:11px;margin-bottom:14px}
+.acm-dl-row{display:flex;align-items:flex-start;gap:10px;font-size:12.5px;color:var(--fg2)}
+.acm-dl-n{width:20px;height:20px;border-radius:50%;background:rgba(0,200,240,.1);color:var(--cyan);font-size:10px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+
+/* ── Step 4: configure monitoring ── */
+.acm-row{display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border1)}
+.acm-row:last-child{border-bottom:none}
+.acm-row-lbl{font-size:12.5px;font-weight:600;color:var(--fg1)}
+.acm-row-sub{font-size:11px;color:var(--fg3);margin-top:2px}
+.acm-tog{width:36px;height:20px;border-radius:10px;background:var(--border2);border:none;cursor:pointer;position:relative;transition:background .2s;flex-shrink:0}
+.acm-tog.on{background:var(--cyan)}
+.acm-tog::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#fff;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.acm-tog.on::after{left:18px}
+
+.acm-folder-box{background:var(--bg);border:1px solid var(--border1);border-radius:10px;overflow:hidden;margin-bottom:13px}
+.acm-folder-hdr{display:flex;align-items:center;justify-content:space-between;padding:10px 13px;border-bottom:1px solid var(--border1);font-size:11.5px;color:var(--fg2)}
+.acm-folder-list{padding:6px 0}
+.acm-folder-item{display:flex;align-items:center;gap:9px;padding:7px 13px;font-size:12.5px;color:var(--fg2);cursor:pointer;transition:background .12s}
+.acm-folder-item:hover{background:rgba(255,255,255,.03)}
+.acm-folder-item input[type=checkbox]{accent-color:var(--cyan);width:14px;height:14px;flex-shrink:0}
+.acm-folder-icon{font-size:14px;flex-shrink:0}
+.acm-folder-name{flex:1}
+.acm-folder-cnt{font-size:10.5px;color:var(--fg3)}
+
+.acm-chip-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}
+.acm-chip{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border1);font-size:12px;font-weight:500;color:var(--fg2);cursor:pointer;transition:border-color .13s,background .13s,color .13s;user-select:none}
+.acm-chip:hover{border-color:var(--border2)}
+.acm-chip.on{border-color:var(--cyan);background:rgba(0,200,240,.08);color:var(--cyan)}
+
+.acm-radio-group{display:flex;flex-direction:column;gap:8px;margin-top:6px}
+.acm-radio{display:flex;align-items:flex-start;gap:10px;cursor:pointer}
+.acm-radio input{accent-color:var(--cyan);margin-top:2px;flex-shrink:0}
+.acm-radio-lbl{font-size:12.5px;color:var(--fg2)}
+.acm-radio-sub{font-size:11px;color:var(--fg3);margin-top:2px}
+
+.acm-slider-wrap{margin-top:6px}
+.acm-slider{width:100%;accent-color:var(--cyan)}
+.acm-slider-labels{display:flex;justify-content:space-between;font-size:10.5px;color:var(--fg3);margin-top:3px}
+
+.acm-select{width:100%;height:36px;background:var(--bg);border:1px solid var(--border2);border-radius:8px;padding:0 10px;font-size:13px;color:var(--fg1);outline:none}
+
+.acm-info-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;background:rgba(0,200,240,.07);border:1px solid rgba(0,200,240,.2);border-radius:8px;font-size:12px;color:var(--cyan);margin-bottom:16px}
+
+/* ── Step 5: test connection ── */
+.acm-test-list{display:flex;flex-direction:column;gap:0;margin-bottom:22px}
+.acm-test-item{display:flex;align-items:center;gap:13px;padding:13px 0;border-bottom:1px solid var(--border1);opacity:.35;transition:opacity .3s}
+.acm-test-item:last-child{border-bottom:none}
+.acm-test-item.done{opacity:1}
+.acm-test-item.running{opacity:1}
+.acm-test-ico{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border2);display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:background .3s,border-color .3s}
+.acm-test-item.done .acm-test-ico{background:rgba(0,212,138,.12);border-color:var(--green);color:var(--green)}
+.acm-test-item.running .acm-test-ico{border-color:var(--cyan);animation:acm-spin .7s linear infinite}
+@keyframes acm-spin{to{transform:rotate(360deg)}}
+.acm-test-text{flex:1}
+.acm-test-lbl{font-size:13px;font-weight:600;color:var(--fg1)}
+.acm-test-detail{font-size:11px;color:var(--fg3);margin-top:2px}
+.acm-test-time{font-size:10.5px;color:var(--fg3);margin-left:auto}
+
+.acm-preview-card{background:var(--bg);border:1px solid var(--border1);border-radius:11px;padding:14px;margin-top:20px;display:none}
+.acm-preview-card.show{display:block}
+.acm-preview-hdr{font-size:11px;font-weight:700;color:var(--fg3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:10px}
+.acm-preview-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border1);font-size:12px;color:var(--fg2)}
+.acm-preview-row:last-child{border-bottom:none}
+.acm-preview-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* ── Step 6: done ── */
+.acm-done-wrap{text-align:center;padding:12px 0 4px}
+.acm-done-ring{width:68px;height:68px;border-radius:50%;background:rgba(0,212,138,.1);border:2px solid var(--green);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:26px;animation:acmRingPop .4s cubic-bezier(.22,1,.36,1)}
+@keyframes acmRingPop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.acm-done-title{font-family:var(--f-display);font-size:20px;font-weight:700;color:var(--fg1);margin-bottom:6px}
+.acm-done-sub{font-size:13px;color:var(--fg3);margin-bottom:22px}
+.acm-done-card{background:var(--bg);border:1px solid var(--border1);border-radius:11px;padding:14px;text-align:left;margin-bottom:22px}
+.acm-done-row{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--fg2);padding:6px 0;border-bottom:1px solid var(--border1)}
+.acm-done-row:last-child{border-bottom:none}
+.acm-done-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
+
+/* ═══════════════════════ TOAST ═══════════════════════ */
+.toast {
+  position: fixed;
+  top: calc(var(--live-h) + 12px);
+  right: 20px;
+  background: var(--card2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--t1);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+  z-index: 200;
+  transform: translateX(120%);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+  max-width: 300px;
+}
+.toast.show { transform: translateX(0); }
+.toast-icon { flex-shrink: 0; }
+
+/* ── Standalone-extract overrides (not in original grid shell) ── */
+html, body { height: auto; overflow: visible; }
+.main { overflow: visible; padding-top: 24px; padding-bottom: 40px; }
+</style>
+</head>
+<body>
+<div class="main">
+    <!-- ──── VIEW: CHANNELS ──── -->
+    <div class="view active main-content-pad" id="view-channels">
+      <div class="page-header" style="margin-bottom:20px">
+        <div>
+          <div class="page-title">Channels</div>
+          <div class="page-sub">Connect and manage the sources QRUIT monitors for JDs, CVs and commands</div>
+        </div>
+        <div class="header-actions">
+          <button class="btn btn-ghost btn-sm" onclick="showToast('Syncing all channels…','cyan')">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+            Sync All
+          </button>
+          <button class="btn btn-primary btn-sm" onclick="openAddChannel()">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Channel
+          </button>
+        </div>
+      </div>
+
+      <!-- Health summary -->
+      <div class="chn-health">
+        <div class="chn-health-stat">
+          <div class="chn-health-val green">7</div>
+          <div class="chn-health-key">Connected</div>
+        </div>
+        <div class="chn-health-stat">
+          <div class="chn-health-val amber">1</div>
+          <div class="chn-health-key">Warning</div>
+        </div>
+        <div class="chn-health-stat">
+          <div class="chn-health-val">3</div>
+          <div class="chn-health-key">Not Set Up</div>
+        </div>
+        <div class="chn-health-stat">
+          <div class="chn-health-val">0</div>
+          <div class="chn-health-key">Errors</div>
+        </div>
+        <div class="chn-health-stat">
+          <div class="chn-health-val">11</div>
+          <div class="chn-health-key">Total Channels</div>
+        </div>
+        <div class="chn-health-sync">
+          <div class="chn-sync-dot"></div>
+          All channels synced · 2 mins ago
+        </div>
+      </div>
+
+      <!-- ══ EMAIL ══ -->
+      <div class="chn-section">
+        <div class="chn-section-hdr">
+          <div>
+            <div class="chn-section-title">Email</div>
+            <div class="chn-section-sub">QRUIT reads these inboxes for incoming JDs, CV attachments, and text commands</div>
+          </div>
+        </div>
+        <div class="chn-grid">
+
+          <!-- Gmail -->
+          <div class="chn-card chn-connected">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:#EA4335;font-family:var(--f-display)">G</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">Gmail</div>
+                <div class="chn-svc-cat">Google Workspace · Push Notifications</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div class="chn-status st-connected"><div class="chn-status-dot"></div>Connected</div>
+                <label class="chn-sw"><input type="checkbox" checked onchange="showToast('Gmail '+(this.checked?'enabled':'paused'),'cyan')"><span class="chn-sw-slider"></span></label>
+              </div>
+            </div>
+            <div class="chn-account">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              sarah@dhiveda.ai
+            </div>
+            <div>
+              <div class="chn-monitors-label">Monitoring</div>
+              <div class="chn-monitor-chips">
+                <span class="chn-mchip">JD detection</span>
+                <span class="chn-mchip">CV attachments</span>
+                <span class="chn-mchip">Commands</span>
+                <span class="chn-mchip">Thread context</span>
+              </div>
+            </div>
+            <div class="chn-sync">
+              <span class="chn-sync-method">Push · Pub/Sub</span>
+              <span>Last sync: 2 mins ago</span>
+            </div>
+            <div class="chn-actions">
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Gmail test sent','green')">Test</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Gmail settings','cyan')">Settings</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Disconnect Gmail?','amber')">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Outlook -->
+          <div class="chn-card chn-connected">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:#0078D4;font-size:13px;font-family:var(--f-display)">Ou</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">Outlook / Microsoft 365</div>
+                <div class="chn-svc-cat">Microsoft Graph API · Webhooks</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div class="chn-status st-connected"><div class="chn-status-dot"></div>Connected</div>
+                <label class="chn-sw"><input type="checkbox" checked onchange="showToast('Outlook '+(this.checked?'enabled':'paused'),'cyan')"><span class="chn-sw-slider"></span></label>
+              </div>
+            </div>
+            <div class="chn-account">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              sarah.rajan@reqruit.ai
+            </div>
+            <div>
+              <div class="chn-monitors-label">Monitoring</div>
+              <div class="chn-monitor-chips">
+                <span class="chn-mchip">JD detection</span>
+                <span class="chn-mchip">CV attachments</span>
+                <span class="chn-mchip">OneDrive links</span>
+                <span class="chn-mchip">Commands</span>
+              </div>
+            </div>
+            <div class="chn-sync">
+              <span class="chn-sync-method">Webhook · Graph API</span>
+              <span>Last sync: 4 mins ago</span>
+            </div>
+            <div class="chn-actions">
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Outlook test sent','green')">Test</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Outlook settings','cyan')">Settings</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Disconnect Outlook?','amber')">Disconnect</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ MESSAGING ══ -->
+      <div class="chn-section">
+        <div class="chn-section-hdr">
+          <div>
+            <div class="chn-section-title">Messaging</div>
+            <div class="chn-section-sub">Receive JDs and CVs as messages or attachments, and send candidate updates</div>
+          </div>
+        </div>
+        <div class="chn-grid">
+
+          <!-- WhatsApp -->
+          <div class="chn-card chn-connected">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:#25D366;font-size:18px">✆</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">WhatsApp Business</div>
+                <div class="chn-svc-cat">Meta Cloud API · Verified Business</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div class="chn-status st-connected"><div class="chn-status-dot"></div>Connected</div>
+                <label class="chn-sw"><input type="checkbox" checked onchange="showToast('WhatsApp '+(this.checked?'enabled':'paused'),'cyan')"><span class="chn-sw-slider"></span></label>
+              </div>
+            </div>
+            <div class="chn-account">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.35 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+              +44 7700 900001 · Reqruit.ai Business
+            </div>
+            <div>
+              <div class="chn-monitors-label">Monitoring</div>
+              <div class="chn-monitor-chips">
+                <span class="chn-mchip">JD text messages</span>
+                <span class="chn-mchip">Document CVs</span>
+                <span class="chn-mchip">Image CVs (OCR)</span>
+                <span class="chn-mchip">Commands</span>
+              </div>
+            </div>
+            <div class="chn-sync">
+              <span class="chn-sync-method">Webhook · HMAC verified</span>
+              <span>Templates: 4 approved</span>
+            </div>
+            <div class="chn-actions">
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Test message sent','green')">Test</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('WhatsApp templates','cyan')">Templates</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Disconnect WhatsApp?','amber')">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- SMS placeholder -->
+          <div class="chn-card chn-off">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:var(--border2)">💬</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">SMS / Twilio</div>
+                <div class="chn-svc-cat">Two-way SMS for candidate outreach</div>
+              </div>
+              <div class="chn-status st-off">Not set up</div>
+            </div>
+            <div class="chn-connect-cta">
+              <p>Send and receive candidate messages via SMS in regions without WhatsApp coverage.</p>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Twilio integration coming soon','violet')">Coming Soon</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ CLOUD STORAGE ══ -->
+      <div class="chn-section">
+        <div class="chn-section-hdr">
+          <div>
+            <div class="chn-section-title">Cloud &amp; Local Storage</div>
+            <div class="chn-section-sub">QRUIT watches these folders for new JD and CV files — processed automatically when detected</div>
+          </div>
+        </div>
+        <div class="chn-grid chn-grid-3">
+
+          <!-- OneDrive -->
+          <div class="chn-card chn-connected">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:#0078D4;font-size:13px;font-family:var(--f-display)">Od</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">OneDrive</div>
+                <div class="chn-svc-cat">Microsoft Graph · Delta sync</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div class="chn-status st-connected"><div class="chn-status-dot"></div>Connected</div>
+                <label class="chn-sw"><input type="checkbox" checked onchange="showToast('OneDrive '+(this.checked?'enabled':'paused'),'cyan')"><span class="chn-sw-slider"></span></label>
+              </div>
+            </div>
+            <div class="chn-account">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              sarah.rajan@reqruit.ai
+            </div>
+            <div>
+              <div class="chn-monitors-label">Monitored Folders</div>
+              <div class="chn-folders">
+                <div class="chn-folder-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  Recruitment / Active Roles
+                  <button class="chn-folder-rm" onclick="showToast('Folder removed','amber')">✕</button>
+                </div>
+                <div class="chn-folder-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  Incoming CVs
+                  <button class="chn-folder-rm" onclick="showToast('Folder removed','amber')">✕</button>
+                </div>
+                <button class="chn-add-folder" onclick="showToast('Folder picker opening…','cyan')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add folder
+                </button>
+              </div>
+            </div>
+            <div class="chn-sync">
+              <span class="chn-sync-method">Delta query · webhooks</span>
+              <span>Last: 6 mins ago</span>
+            </div>
+            <div class="chn-actions">
+              <button class="btn btn-ghost btn-sm" onclick="showToast('OneDrive settings','cyan')">Settings</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Disconnect OneDrive?','amber')">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Google Drive -->
+          <div class="chn-card chn-connected">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:#4285F4;font-family:var(--f-display);font-size:13px">Gd</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">Google Drive</div>
+                <div class="chn-svc-cat">Drive API v3 · Push notifications</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div class="chn-status st-connected"><div class="chn-status-dot"></div>Connected</div>
+                <label class="chn-sw"><input type="checkbox" checked onchange="showToast('Google Drive '+(this.checked?'enabled':'paused'),'cyan')"><span class="chn-sw-slider"></span></label>
+              </div>
+            </div>
+            <div class="chn-account">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+              sarah@dhiveda.ai
+            </div>
+            <div>
+              <div class="chn-monitors-label">Monitored Folders</div>
+              <div class="chn-folders">
+                <div class="chn-folder-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  My Drive / Recruitment
+                  <button class="chn-folder-rm" onclick="showToast('Folder removed','amber')">✕</button>
+                </div>
+                <div class="chn-folder-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  Shared / Client JDs 2026
+                  <button class="chn-folder-rm" onclick="showToast('Folder removed','amber')">✕</button>
+                </div>
+                <button class="chn-add-folder" onclick="showToast('Folder picker opening…','cyan')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add folder
+                </button>
+              </div>
+            </div>
+            <div class="chn-sync">
+              <span class="chn-sync-method">Pub/Sub channels</span>
+              <span>Last: 3 mins ago</span>
+            </div>
+            <div class="chn-actions">
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Google Drive settings','cyan')">Settings</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Disconnect Google Drive?','amber')">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Local Drive -->
+          <div class="chn-card chn-warning">
+            <div class="chn-top">
+              <div class="chn-svc-icon" style="background:var(--border2)">🖥</div>
+              <div class="chn-svc-info">
+                <div class="chn-svc-name">Local Drive</div>
+                <div class="chn-svc-cat">QRUIT Desktop Agent · v2.4.1</div>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:flex-end;gap:6px">
+                <div class="chn-status st-warning"><div class="chn-status-dot"></div>Update available</div>
+                <label class="chn-sw"><input type="checkbox" checked onchange="showToast('Local Drive '+(this.checked?'enabled':'paused'),'cyan')"><span class="chn-sw-slider"></span></label>
+              </div>
+            </div>
+            <div class="chn-account">
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+              MacBook Pro · QRUIT-AGENT-MBP
+            </div>
+            <div>
+              <div class="chn-monitors-label">Monitored Paths</div>
+              <div class="chn-folders">
+                <div class="chn-folder-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  ~/Downloads/Recruitment
+                  <button class="chn-folder-rm" onclick="showToast('Path removed','amber')">✕</button>
+                </div>
+                <div class="chn-folder-chip">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+                  ~/Desktop/JDs Inbox
+                  <button class="chn-folder-rm" onclick="showToast('Path removed','amber')">✕</button>
+                </div>
+                <button class="chn-add-folder" onclick="showToast('Add local folder path','cyan')">
+                  <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                  Add path
+                </button>
+              </div>
+            </div>
+            <div class="chn-sync" style="color:var(--amber)">
+              <span>⚠ Agent v2.5.0 available</span>
+              <span style="color:var(--t3)">Last: 11 mins ago</span>
+            </div>
+            <div class="chn-actions">
+              <button class="btn btn-primary btn-sm" onclick="showToast('Downloading v2.5.0…','green')">Update Agent</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Local drive settings','cyan')">Settings</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ SOURCING APIS ══ -->
+      <div class="chn-section">
+        <div class="chn-section-hdr">
+          <div>
+            <div class="chn-section-title">Candidate Sourcing APIs</div>
+            <div class="chn-section-sub">QRUIT searches these platforms proactively when the CV pool for a role is below threshold</div>
+          </div>
+        </div>
+        <div class="chn-grid chn-grid-4">
+
+          <!-- LinkedIn -->
+          <div class="src-card src-connected" style="border-left-color:#0A66C2">
+            <div class="src-top">
+              <div class="src-icon" style="background:#0A66C2">in</div>
+              <div>
+                <div class="src-name">LinkedIn</div>
+                <div class="src-cat">Recruiter API · Talent Solutions</div>
+              </div>
+              <div class="chn-status st-connected" style="margin-left:auto"><div class="chn-status-dot"></div>Live</div>
+            </div>
+            <div>
+              <div class="chn-credit-label">
+                Monthly search credits
+                <span>847 / 1,000 used</span>
+              </div>
+              <div class="chn-credit-track">
+                <div class="chn-credit-fill warn" style="width:84.7%"></div>
+              </div>
+            </div>
+            <div style="font-size:11px;color:var(--t3)">Resets 1 June 2026</div>
+            <div class="src-actions">
+              <button class="btn btn-ghost btn-sm" onclick="showToast('LinkedIn settings','cyan')">Settings</button>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Disconnect LinkedIn?','amber')">Disconnect</button>
+            </div>
+          </div>
+
+          <!-- Indeed -->
+          <div class="src-card" style="opacity:0.7">
+            <div class="src-top">
+              <div class="src-icon" style="background:#003A9B;font-size:11px;font-family:var(--f-display)">Ind</div>
+              <div>
+                <div class="src-name">Indeed</div>
+                <div class="src-cat">Publisher API · Resume search</div>
+              </div>
+              <div class="chn-status st-off" style="margin-left:auto">Not set up</div>
+            </div>
+            <div class="chn-connect-cta" style="padding:8px 0">
+              <p style="font-size:11px">Tap into Indeed's 250M+ CV database for roles that need a wider search.</p>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Indeed API setup','cyan')">Connect</button>
+            </div>
+          </div>
+
+          <!-- Reed -->
+          <div class="src-card" style="opacity:0.7">
+            <div class="src-top">
+              <div class="src-icon" style="background:#CC0000;font-size:11px;font-family:var(--f-display)">Rd</div>
+              <div>
+                <div class="src-name">Reed.co.uk</div>
+                <div class="src-cat">Jobs API · UK talent</div>
+              </div>
+              <div class="chn-status st-off" style="margin-left:auto">Not set up</div>
+            </div>
+            <div class="chn-connect-cta" style="padding:8px 0">
+              <p style="font-size:11px">Best for UK-focused technical and professional roles.</p>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Reed API setup','cyan')">Connect</button>
+            </div>
+          </div>
+
+          <!-- Naukri -->
+          <div class="src-card" style="opacity:0.7">
+            <div class="src-top">
+              <div class="src-icon" style="background:#FF7555;font-size:11px;font-family:var(--f-display)">Nk</div>
+              <div>
+                <div class="src-name">Naukri.com</div>
+                <div class="src-cat">Recruiter API · India / APAC</div>
+              </div>
+              <div class="chn-status st-off" style="margin-left:auto">Not set up</div>
+            </div>
+            <div class="chn-connect-cta" style="padding:8px 0">
+              <p style="font-size:11px">For roles targeting India and South / Southeast Asia talent pools.</p>
+              <button class="btn btn-ghost btn-sm" onclick="showToast('Naukri API setup','cyan')">Connect</button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ══ NOTIFICATIONS ══ -->
+      <div class="chn-section">
+        <div class="chn-section-hdr">
+          <div>
+            <div class="chn-section-title">Notification Preferences</div>
+            <div class="chn-section-sub">Choose how and when QRUIT reaches out to you during pipeline execution</div>
+          </div>
+        </div>
+        <div class="chn-notif-grid" style="max-width:680px">
+
+          <div class="chn-notif-row">
+            <div class="chn-notif-icon" style="background:var(--cyan-dim);color:var(--cyan)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+            </div>
+            <div class="chn-notif-info">
+              <div class="chn-notif-name">Email notifications</div>
+              <div class="chn-notif-sub">Module completions, approval requests, final reports → sarah@dhiveda.ai</div>
+            </div>
+            <label class="chn-sw"><input type="checkbox" checked onchange="showToast('Email notifications '+(this.checked?'on':'off'),'cyan')"><span class="chn-sw-slider"></span></label>
+          </div>
+
+          <div class="chn-notif-row">
+            <div class="chn-notif-icon" style="background:#25D36615;color:#25D366">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12 19.79 19.79 0 0 1 1.61 3.35 2 2 0 0 1 3.6 1h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.6a16 16 0 0 0 6.29 6.29l.96-.96a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
+            <div class="chn-notif-info">
+              <div class="chn-notif-name">WhatsApp summaries</div>
+              <div class="chn-notif-sub">Short pipeline updates sent to +44 7700 900001 after each module</div>
+            </div>
+            <label class="chn-sw"><input type="checkbox" checked onchange="showToast('WhatsApp summaries '+(this.checked?'on':'off'),'cyan')"><span class="chn-sw-slider"></span></label>
+          </div>
+
+          <div class="chn-notif-row">
+            <div class="chn-notif-icon" style="background:var(--card2);color:var(--t2)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            </div>
+            <div class="chn-notif-info">
+              <div class="chn-notif-name">In-app notifications</div>
+              <div class="chn-notif-sub">Alerts inside the Reqruit.ai dashboard and QRUIT Chat tab</div>
+            </div>
+            <label class="chn-sw"><input type="checkbox" checked onchange="showToast('In-app notifications '+(this.checked?'on':'off'),'cyan')"><span class="chn-sw-slider"></span></label>
+          </div>
+
+          <div class="chn-notif-row">
+            <div class="chn-notif-icon" style="background:var(--card2);color:var(--t2)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+            </div>
+            <div class="chn-notif-info">
+              <div class="chn-notif-name">Daily digest</div>
+              <div class="chn-notif-sub">Single daily email summarising all pipeline activity across all active roles</div>
+            </div>
+            <label class="chn-sw"><input type="checkbox" onchange="showToast('Daily digest '+(this.checked?'on':'off'),'cyan')"><span class="chn-sw-slider"></span></label>
+          </div>
+
+          <div class="chn-notif-row">
+            <div class="chn-notif-icon" style="background:var(--violet-dim);color:var(--violet)">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 8 12 12 14 14"/></svg>
+            </div>
+            <div class="chn-notif-info">
+              <div class="chn-notif-name">SLA breach alerts</div>
+              <div class="chn-notif-sub">Notify me if QRUIT is waiting on my approval for more than 24 hours</div>
+            </div>
+            <label class="chn-sw"><input type="checkbox" checked onchange="showToast('SLA alerts '+(this.checked?'on':'off'),'cyan')"><span class="chn-sw-slider"></span></label>
+          </div>
+
+        </div>
+      </div>
+
+    </div><!-- /view-channels -->
+
+</div><!-- /.main -->
+
+<!-- ════════════════ TOAST ════════════════ -->
+<div class="toast" id="toast">
+  <span class="toast-icon" id="toastIcon">✓</span>
+  <span id="toastText"></span>
+</div>
+
+<script>
+  let toastTimer;
+  function showToast(msg, type) {
+    const toast = document.getElementById('toast');
+    const text  = document.getElementById('toastText');
+    const icon  = document.getElementById('toastIcon');
+    text.textContent = msg;
+    const icons  = { cyan: '→', green: '✓', amber: '⚠', violet: '✦', red: '✕' };
+    const colors = { cyan: 'var(--cyan)', green: 'var(--green)', amber: 'var(--amber)', violet: 'var(--violet)', red: 'var(--red)' };
+    icon.textContent = icons[type] || '→';
+    icon.style.color = colors[type] || 'var(--cyan)';
+    toast.classList.add('show');
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 3200);
+  }
+  // Stub: standalone extract has only the Channels view, so "navigate" just closes the modal.
+  function navigate(view, el) { /* single-view extract — nothing to switch to */ }
+</script>
+<!-- ════════════════ ADD CHANNEL MODAL ════════════════ -->
+<div class="acm-overlay" id="acmOverlay" onclick="acmBdrop(event)">
+  <div class="acm-modal" id="acmModal">
+
+    <!-- Header -->
+    <div class="acm-header">
+      <div class="acm-hdr-row">
+        <div>
+          <div class="acm-title" id="acmTitle">Add Channel</div>
+          <div class="acm-sub"  id="acmSub">Choose the type of source you want QRUIT to monitor</div>
+        </div>
+        <div class="acm-xbtn" onclick="closeAddChannel()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        </div>
+      </div>
+      <div class="acm-rail" id="acmRail">
+        <div class="acm-si active" id="acmS1"><div class="acm-snum">1</div><span>Source</span></div>
+        <div class="acm-ssep"></div>
+        <div class="acm-si" id="acmS2"><div class="acm-snum">2</div><span>Provider</span></div>
+        <div class="acm-ssep"></div>
+        <div class="acm-si" id="acmS3"><div class="acm-snum">3</div><span>Authorise</span></div>
+        <div class="acm-ssep"></div>
+        <div class="acm-si" id="acmS4"><div class="acm-snum">4</div><span>Configure</span></div>
+        <div class="acm-ssep"></div>
+        <div class="acm-si" id="acmS5"><div class="acm-snum">5</div><span>Test</span></div>
+        <div class="acm-ssep"></div>
+        <div class="acm-si" id="acmS6"><div class="acm-snum">6</div><span>Done</span></div>
+      </div>
+    </div>
+
+    <!-- Body -->
+    <div class="acm-body">
+
+      <!-- Step 1: Source Type -->
+      <div class="acm-pane active" id="acmP1">
+        <div class="acm-type-grid">
+          <div class="acm-type-tile" onclick="acmPickType('email',this)">
+            <div class="acm-tile-cnt">4</div>
+            <div class="acm-tile-ico" style="background:rgba(234,67,53,.14);color:#EA4335">✉</div>
+            <div class="acm-tile-n">Email</div>
+            <div class="acm-tile-d">Mailbox monitoring for JDs, CV attachments and text commands in real time.</div>
+          </div>
+          <div class="acm-type-tile" onclick="acmPickType('messaging',this)">
+            <div class="acm-tile-cnt">4</div>
+            <div class="acm-tile-ico" style="background:rgba(37,211,102,.12);color:#25D366">💬</div>
+            <div class="acm-tile-n">Messaging</div>
+            <div class="acm-tile-d">Two-way channels — receive CVs, send commands, get candidate pipeline updates.</div>
+          </div>
+          <div class="acm-type-tile" onclick="acmPickType('storage',this)">
+            <div class="acm-tile-cnt">5</div>
+            <div class="acm-tile-ico" style="background:rgba(0,120,212,.12);color:#0078D4">🗂</div>
+            <div class="acm-tile-n">Cloud Storage</div>
+            <div class="acm-tile-d">Watch folders — QRUIT processes new JD and CV files the moment they appear.</div>
+          </div>
+          <div class="acm-type-tile" onclick="acmPickType('sourcing',this)">
+            <div class="acm-tile-cnt">6</div>
+            <div class="acm-tile-ico" style="background:rgba(10,102,194,.12);color:#0A66C2">🔍</div>
+            <div class="acm-tile-n">Sourcing APIs</div>
+            <div class="acm-tile-d">Access candidate databases for active outbound searches across job boards.</div>
+          </div>
+          <div class="acm-type-tile" onclick="acmPickType('ats',this)">
+            <div class="acm-tile-cnt">4</div>
+            <div class="acm-tile-ico" style="background:rgba(123,97,255,.12);color:var(--violet)">⚙</div>
+            <div class="acm-tile-n">ATS &amp; HRMS</div>
+            <div class="acm-tile-d">Bi-directional sync — pull requisitions, push shortlists, reflect stage changes.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2: Provider -->
+      <div class="acm-pane" id="acmP2">
+        <div class="acm-back" onclick="acmGo(1)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back
+        </div>
+        <div style="font-size:11px;font-weight:700;color:var(--fg3);text-transform:uppercase;letter-spacing:.7px;margin-bottom:12px" id="acmCatLbl"></div>
+        <div class="acm-prov-grid" id="acmProvGrid"></div>
+      </div>
+
+      <!-- Step 3: Authorise -->
+      <div class="acm-pane" id="acmP3">
+        <div class="acm-back" onclick="acmGo(2)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back
+        </div>
+        <div class="acm-prov-bar">
+          <div class="acm-pico" id="acmBarIco" style="width:40px;height:40px;border-radius:10px;font-size:13px;font-weight:800;color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0"></div>
+          <div><div class="acm-prov-bar-name" id="acmBarName"></div><div class="acm-prov-bar-sub" id="acmBarSub"></div></div>
+        </div>
+        <div id="acmAuthBody"></div>
+      </div>
+
+      <!-- Step 4: Configure Monitoring -->
+      <div class="acm-pane" id="acmP4">
+        <div class="acm-back" onclick="acmGo(3)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back
+        </div>
+        <div id="acmMonBody"></div>
+      </div>
+
+      <!-- Step 5: Test Connection -->
+      <div class="acm-pane" id="acmP5">
+        <div class="acm-back" onclick="acmGo(4)">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg> Back
+        </div>
+        <div style="font-size:13px;font-weight:700;color:var(--fg1);margin-bottom:4px" id="acmTestTitle">Testing connection…</div>
+        <div style="font-size:11.5px;color:var(--fg3);margin-bottom:18px" id="acmTestSub">Verifying credentials and permissions</div>
+        <div class="acm-test-list" id="acmTestList"></div>
+        <div class="acm-preview-card" id="acmPreviewCard">
+          <div class="acm-preview-hdr">Live preview — first items QRUIT can see</div>
+          <div id="acmPreviewRows"></div>
+        </div>
+      </div>
+
+      <!-- Step 6: Done -->
+      <div class="acm-pane" id="acmP6">
+        <div class="acm-done-wrap">
+          <div class="acm-done-ring">✓</div>
+          <div class="acm-done-title" id="acmDoneTitle">Channel Connected</div>
+          <div class="acm-done-sub" id="acmDoneSub">QRUIT is now monitoring this channel in real time.</div>
+          <div class="acm-done-card" id="acmDoneCard"></div>
+          <button class="btn btn-primary" onclick="acmFinish()" style="width:100%">Go to Channels →</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <div class="acm-footer" id="acmFooter">
+      <button class="btn btn-ghost btn-sm" onclick="closeAddChannel()">Cancel</button>
+      <div id="acmFR"></div>
+    </div>
+
+  </div>
+
+</div><!-- /acm-overlay -->
+
+<script>
+// ADD CHANNEL MODAL
+// ══════════════════════════════════════
+// ═══ ADD CHANNEL WIZARD ═══════════════════════════════════════════════
+  const ACMP = {
+    email:[
+      {id:'gmail',    n:'Gmail',              a:'G',  bg:'#EA4335', auth:'OAuth 2.0 · Google Workspace',   type:'oauth'},
+      {id:'outlook',  n:'Outlook / M365',     a:'Ou', bg:'#0078D4', auth:'OAuth 2.0 · Microsoft Graph',   type:'oauth'},
+      {id:'yahoo',    n:'Yahoo Mail',          a:'Yh', bg:'#6001D2', auth:'IMAP + App Password',           type:'key'},
+      {id:'apple',    n:'Apple Mail / iCloud', a:'✉',  bg:'#444',    auth:'IMAP · Planned',                type:'oauth', soon:true},
+    ],
+    messaging:[
+      {id:'whatsapp', n:'WhatsApp Business',  a:'W',  bg:'#25D366', auth:'Meta Cloud API · OAuth',        type:'oauth'},
+      {id:'twilio',   n:'SMS / Twilio',        a:'Tw', bg:'#F22F46', auth:'Twilio API Key',               type:'key'},
+      {id:'slack',    n:'Slack',               a:'S',  bg:'#4A154B', auth:'OAuth 2.0 · Slack App',        type:'oauth'},
+      {id:'teams',    n:'Microsoft Teams',     a:'T',  bg:'#5059C9', auth:'Bot Framework · Planned',      type:'oauth', soon:true},
+    ],
+    storage:[
+      {id:'onedrive', n:'OneDrive',            a:'Od', bg:'#0078D4', auth:'OAuth 2.0 · Microsoft Graph',  type:'oauth'},
+      {id:'gdrive',   n:'Google Drive',         a:'Gd', bg:'#4285F4', auth:'OAuth 2.0 · Drive API v3',   type:'oauth'},
+      {id:'dropbox',  n:'Dropbox',              a:'Db', bg:'#0061FF', auth:'OAuth 2.0 · Dropbox API',    type:'oauth'},
+      {id:'local',    n:'Local Drive',          a:'🖥', bg:'#3a3f55', auth:'QRUIT Desktop Agent',          type:'agent'},
+      {id:'sharepoint',n:'SharePoint',          a:'Sp', bg:'#038387', auth:'Graph API · Planned',         type:'oauth', soon:true},
+    ],
+    sourcing:[
+      {id:'linkedin', n:'LinkedIn Recruiter',  a:'in', bg:'#0A66C2', auth:'OAuth 2.0 · Recruiter API',   type:'oauth'},
+      {id:'indeed',   n:'Indeed',               a:'Id', bg:'#003A9B', auth:'Publisher API Key',           type:'key'},
+      {id:'reed',     n:'Reed.co.uk',           a:'Rd', bg:'#CC0000', auth:'Jobs API Key',               type:'key'},
+      {id:'naukri',   n:'Naukri.com',           a:'Nk', bg:'#FF7555', auth:'Recruiter API Key',          type:'key'},
+      {id:'monster',  n:'Monster',              a:'Mo', bg:'#6E0F7B', auth:'Resume API · Planned',        type:'key', soon:true},
+      {id:'glassdoor',n:'Glassdoor',            a:'Gl', bg:'#0CAA41', auth:'Jobs API · Planned',          type:'key', soon:true},
+    ],
+    ats:[
+      {id:'greenhouse',n:'Greenhouse',          a:'Gh', bg:'#24A47F', auth:'Harvest API Key',             type:'key'},
+      {id:'workday',  n:'Workday',              a:'Wd', bg:'#F4703B', auth:'Staffing API · OAuth',        type:'oauth'},
+      {id:'bamboo',   n:'BambooHR',             a:'Bm', bg:'#73C41E', auth:'API v1 Key · Planned',        type:'key', soon:true},
+      {id:'sap',      n:'SAP SuccessFactors',   a:'SF', bg:'#0070F2', auth:'OData API · Planned',         type:'oauth', soon:true},
+    ],
+  };
+  const ACMT_LABEL = {email:'Email',messaging:'Messaging',storage:'Cloud & Local Storage',sourcing:'Sourcing APIs',ats:'ATS & HRMS'};
+  const ACMT_HEADER = {
+    1:['Add Channel','Choose the type of source QRUIT should monitor'],
+    2:['Choose Provider','Select the specific integration to connect'],
+    3:['Authorise Access','Grant QRUIT the permissions it needs'],
+    4:['Configure Monitoring','Tell QRUIT what to look for and how to handle it'],
+    5:['Test Connection','Verifying everything works before going live'],
+    6:['',''],
+  };
+
+  let acmSt = {step:1, type:null, prov:null};
+
+  function openAddChannel(){
+    acmSt={step:1,type:null,prov:null};
+    document.getElementById('acmOverlay').classList.add('acm-open');
+    document.querySelector('.main').style.overflow='hidden';
+    acmRender();
+  }
+  function closeAddChannel(){
+    document.getElementById('acmOverlay').classList.remove('acm-open');
+    document.querySelector('.main').style.overflow='';
+  }
+  function acmBdrop(e){if(e.target===document.getElementById('acmOverlay'))closeAddChannel();}
+  function acmFinish(){closeAddChannel();navigate('channels',null);showToast('Channel connected — QRUIT is monitoring it','green');}
+
+  function acmGo(n){
+    if(n<acmSt.step){
+      if(n<=1){acmSt.type=null;acmSt.prov=null;}
+      if(n<=2){acmSt.prov=null;}
+    }
+    acmSt.step=n;
+    acmRender();
+    if(n===5) acmRunTest();
+  }
+
+  function acmPickType(type,el){
+    acmSt.type=type;
+    document.querySelectorAll('.acm-type-tile').forEach(t=>t.classList.remove('sel'));
+    el.classList.add('sel');
+    document.getElementById('acmFR').innerHTML = btnNext(false);
+  }
+  function acmPickProv(id,el){
+    const p=ACMP[acmSt.type].find(x=>x.id===id);
+    if(!p||p.soon) return;
+    acmSt.prov=id;
+    document.querySelectorAll('.acm-pc').forEach(c=>c.classList.remove('sel'));
+    el.classList.add('sel');
+    document.getElementById('acmFR').innerHTML = btnNext(false);
+  }
+
+  function acmNext(){
+    const s=acmSt;
+    if(s.step===1&&s.type){acmGo(2);return;}
+    if(s.step===2&&s.prov){acmGo(3);return;}
+    if(s.step===3){acmGo(4);return;}
+    if(s.step===4){acmGo(5);return;}
+    if(s.step===5){acmGo(6);return;}
+  }
+
+  function btnNext(dis){
+    return `<button class="btn btn-primary btn-sm" onclick="acmNext()" ${dis?'disabled':''}>
+      Next <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-left:4px"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>`;
+  }
+
+  function acmRender(){
+    const s=acmSt;
+    // panes
+    [1,2,3,4,5,6].forEach(i=>{
+      const p=document.getElementById('acmP'+i);
+      if(p) p.classList.toggle('active',i===s.step);
+    });
+    // step rail
+    [1,2,3,4,5,6].forEach(i=>{
+      const el=document.getElementById('acmS'+i);
+      if(!el) return;
+      el.classList.toggle('done',i<s.step);
+      el.classList.toggle('active',i===s.step);
+      el.querySelector('.acm-snum').textContent = i<s.step ? '✓' : i;
+    });
+    // header text
+    const [t,sub]=ACMT_HEADER[s.step]||['',''];
+    document.getElementById('acmTitle').textContent = t;
+    document.getElementById('acmSub').textContent   = sub;
+    // footer
+    const fr=document.getElementById('acmFR');
+    if(s.step===6){
+      fr.innerHTML='';
+    } else if(s.step===5){
+      fr.innerHTML=`<button class="btn btn-primary btn-sm" id="acmTestNext" onclick="acmGo(6)" disabled>Looks good → Done</button>`;
+    } else if(s.step===4){
+      fr.innerHTML=`<button class="btn btn-primary btn-sm" onclick="acmNext()">Run Connection Test →</button>`;
+    } else if(s.step===3){
+      fr.innerHTML=`<button class="btn btn-primary btn-sm" onclick="acmNext()">Save &amp; Continue →</button>`;
+    } else {
+      const dis = (s.step===1&&!s.type)||(s.step===2&&!s.prov);
+      fr.innerHTML=btnNext(dis);
+    }
+    // step-specific
+    if(s.step===2) acmRenderProviders();
+    if(s.step===3) acmRenderAuth();
+    if(s.step===4) acmRenderMonitor();
+    if(s.step===6) acmRenderDone();
+  }
+
+  function acmRenderProviders(){
+    const list=ACMP[acmSt.type]||[];
+    document.getElementById('acmCatLbl').textContent=ACMT_LABEL[acmSt.type];
+    document.getElementById('acmProvGrid').innerHTML=list.map(p=>`
+      <div class="acm-pc${p.soon?' soon':''}" onclick="acmPickProv('${p.id}',this)" id="acmPC-${p.id}">
+        <div class="acm-pico" style="background:${p.bg}">${p.a}</div>
+        <div style="flex:1;min-width:0">
+          <div class="acm-pname">${p.n}</div>
+          <div class="acm-pauth">${p.auth}</div>
+        </div>
+        <span class="acm-pbadge ${p.soon?'pb-soon':'pb-avail'}">${p.soon?'Soon':'Available'}</span>
+      </div>`).join('');
+  }
+
+  function acmRenderAuth(){
+    const t=acmSt.type, pid=acmSt.prov;
+    const p=(ACMP[t]||[]).find(x=>x.id===pid)||{n:'Provider',a:'?',bg:'#333',auth:'',type:'oauth'};
+    document.getElementById('acmBarIco').textContent=p.a;
+    document.getElementById('acmBarIco').style.background=p.bg;
+    document.getElementById('acmBarName').textContent=p.n;
+    document.getElementById('acmBarSub').textContent=p.auth;
+    let h='';
+    if(p.type==='oauth'){
+      h+=`<div class="acm-sec-lbl">Authorisation</div>
+      <button class="acm-oauth-btn">
+        <div class="acm-oico" style="background:${p.bg}">${p.a}</div>
+        Continue with ${p.n.split('/')[0].trim()} — Sign in &amp; Grant Access
+      </button>
+      <div class="acm-hint" style="text-align:center">QRUIT requests <strong>read-only</strong> access only. No messages are sent and no files are modified.</div>`;
+    } else if(p.type==='key'){
+      const fields={
+        yahoo:   [['Email address','your@yahoo.com','text'],['App password','Generated in Yahoo Account Security','password']],
+        twilio:  [['Account SID','ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx','text'],['Auth token','Your Twilio auth token','password']],
+        indeed:  [['Publisher API key','Your Indeed publisher key','password']],
+        reed:    [['API key','Your Reed.co.uk API key','password']],
+        naukri:  [['Client ID','Your Naukri client ID','text'],['Client secret','Your Naukri client secret','password']],
+        greenhouse:[['Harvest API key','Found in Dev Centre → API Credentials','password']],
+      }[pid]||[['API key','Your API key','password']];
+      h+=`<div class="acm-sec-lbl">API Credentials</div>`;
+      fields.forEach(([lbl,ph,type])=>{
+        h+=`<div class="acm-field"><div class="acm-lbl">${lbl}</div><input class="acm-inp" type="${type}" placeholder="${ph}"></div>`;
+      });
+    } else if(p.type==='agent'){
+      h+=`<div class="acm-sec-lbl">Desktop Agent Setup</div>
+      <div class="acm-dl-box">
+        <div class="acm-dl-row"><div class="acm-dl-n">1</div><span>Download and install the QRUIT Desktop Agent for your OS.</span></div>
+        <div class="acm-dl-row"><div class="acm-dl-n">2</div><span>Launch it — a device token is generated automatically on first run.</span></div>
+        <div class="acm-dl-row"><div class="acm-dl-n">3</div><span>Paste the token below to link this machine to your QRUIT workspace.</span></div>
+      </div>
+      <div class="acm-field" style="margin-top:13px">
+        <div class="acm-lbl">Device token <em>from the installed agent</em></div>
+        <input class="acm-inp" type="text" placeholder="QRDT-XXXX-XXXX-XXXX">
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="showToast('Downloading agent installer…','cyan')">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download Agent (Windows / macOS / Linux)
+      </button>`;
+    }
+    // channel name always
+    h+=`<div class="acm-sep"></div>
+    <div class="acm-sec-lbl">Channel name</div>
+    <div class="acm-field">
+      <input class="acm-inp" type="text" placeholder="${p.n} — leave blank to use this default">
+    </div>`;
+    document.getElementById('acmAuthBody').innerHTML=h;
+  }
+
+  function acmRenderMonitor(){
+    const t=acmSt.type, pid=acmSt.prov;
+    const p=(ACMP[t]||[]).find(x=>x.id===pid)||{n:'Channel',a:'?',bg:'#333'};
+    let h=`<div class="acm-info-chip"><div style="width:18px;height:18px;border-radius:5px;background:${p.bg};display:inline-flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#fff;flex-shrink:0">${p.a}</div> Configuring ${p.n}</div>`;
+
+    if(t==='email'){
+      h+=`
+      <div class="acm-sec-lbl">Folders / Labels to watch</div>
+      <div class="acm-folder-box">
+        <div class="acm-folder-hdr"><span>Inbox folders</span><span style="color:var(--cyan);cursor:pointer;font-size:11px">+ Add label</span></div>
+        <div class="acm-folder-list">
+          <div class="acm-folder-item"><input type="checkbox" checked><span class="acm-folder-icon">📥</span><span class="acm-folder-name">All Inbox</span><span class="acm-folder-cnt">4,281 msgs</span></div>
+          <div class="acm-folder-item"><input type="checkbox" checked><span class="acm-folder-icon">📁</span><span class="acm-folder-name">Recruitment / JDs</span><span class="acm-folder-cnt">142 msgs</span></div>
+          <div class="acm-folder-item"><input type="checkbox" checked><span class="acm-folder-icon">📁</span><span class="acm-folder-name">Recruitment / CVs</span><span class="acm-folder-cnt">398 msgs</span></div>
+          <div class="acm-folder-item"><input type="checkbox"><span class="acm-folder-icon">📁</span><span class="acm-folder-name">Sent</span><span class="acm-folder-cnt">1,047 msgs</span></div>
+        </div>
+      </div>
+      <div class="acm-sec-lbl">Extract from emails</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="acm-row"><div><div class="acm-row-lbl">Job Descriptions</div><div class="acm-row-sub">Text body JDs and attached JD documents</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="acm-row"><div><div class="acm-row-lbl">CVs / Resumes</div><div class="acm-row-sub">PDF, DOCX attachments parsed and screened automatically</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="acm-row"><div><div class="acm-row-lbl">Text commands</div><div class="acm-row-sub">Trigger QRUIT actions by emailing keywords like "Screen for [role]"</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="acm-sep"></div>
+      <div class="acm-sec-lbl">When content is detected</div>
+      <div class="acm-radio-group">
+        <label class="acm-radio"><input type="radio" name="em_mode" checked><div><div class="acm-radio-lbl">Auto-process immediately</div><div class="acm-radio-sub">QRUIT screens and acts without waiting for you</div></div></label>
+        <label class="acm-radio"><input type="radio" name="em_mode"><div><div class="acm-radio-lbl">Queue for my review</div><div class="acm-radio-sub">Each item appears in the inbox view before QRUIT processes it</div></div></label>
+      </div>`;
+    } else if(t==='storage'){
+      h+=`
+      <div class="acm-sec-lbl">Folders to watch</div>
+      <div class="acm-folder-box">
+        <div class="acm-folder-hdr"><span>Select folders</span><span style="color:var(--cyan);cursor:pointer;font-size:11px">Browse…</span></div>
+        <div class="acm-folder-list">
+          <div class="acm-folder-item"><input type="checkbox" checked><span class="acm-folder-icon">📂</span><span class="acm-folder-name">/ Recruitment</span><span class="acm-folder-cnt">34 files</span></div>
+          <div class="acm-folder-item" style="padding-left:26px"><input type="checkbox" checked><span class="acm-folder-icon">📁</span><span class="acm-folder-name">JDs</span><span class="acm-folder-cnt">12 files</span></div>
+          <div class="acm-folder-item" style="padding-left:26px"><input type="checkbox" checked><span class="acm-folder-icon">📁</span><span class="acm-folder-name">CVs / Resumes</span><span class="acm-folder-cnt">22 files</span></div>
+          <div class="acm-folder-item"><input type="checkbox"><span class="acm-folder-icon">📂</span><span class="acm-folder-name">/ Shared with me</span><span class="acm-folder-cnt">89 files</span></div>
+        </div>
+      </div>
+      <div class="acm-sec-lbl">File types to process</div>
+      <div class="acm-chip-row">
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">PDF</div>
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">DOCX</div>
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">DOC</div>
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">TXT</div>
+        <div class="acm-chip" onclick="this.classList.toggle('on')">XLSX</div>
+        <div class="acm-chip" onclick="this.classList.toggle('on')">JPG / PNG</div>
+      </div>
+      <div class="acm-sep"></div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="acm-row"><div><div class="acm-row-lbl">Watch subfolders</div><div class="acm-row-sub">Recurse into all nested subfolders within selected paths</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="acm-row"><div><div class="acm-row-lbl">Process existing files</div><div class="acm-row-sub">Run QRUIT on files already in the folder, not just new arrivals</div></div><button class="acm-tog" onclick="this.classList.toggle('on')"></button></div>
+      </div>`;
+    } else if(t==='sourcing'){
+      h+=`
+      <div class="acm-sec-lbl">Geography</div>
+      <div class="acm-field">
+        <div class="acm-lbl">Primary region</div>
+        <select class="acm-select"><option>United Kingdom</option><option>United States</option><option>India</option><option>Germany</option><option>Australia</option><option>Global (no filter)</option></select>
+      </div>
+      <div class="acm-sec-lbl">Role focus</div>
+      <div class="acm-field">
+        <div class="acm-lbl">Job function keywords <em>comma-separated</em></div>
+        <input class="acm-inp" type="text" placeholder="e.g. DevOps, Platform Engineer, SRE">
+      </div>
+      <div class="acm-sec-lbl">Experience level</div>
+      <div class="acm-chip-row">
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">Entry</div>
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">Mid-level</div>
+        <div class="acm-chip on" onclick="this.classList.toggle('on')">Senior</div>
+        <div class="acm-chip" onclick="this.classList.toggle('on')">Lead / Principal</div>
+        <div class="acm-chip" onclick="this.classList.toggle('on')">Director+</div>
+      </div>
+      <div class="acm-sep"></div>
+      <div class="acm-sec-lbl">Search schedule</div>
+      <div class="acm-radio-group">
+        <label class="acm-radio"><input type="radio" name="src_sched"><div><div class="acm-radio-lbl">Manual only</div><div class="acm-radio-sub">Trigger searches yourself from the dashboard</div></div></label>
+        <label class="acm-radio"><input type="radio" name="src_sched" checked><div><div class="acm-radio-lbl">Daily — 07:00 workspace time</div><div class="acm-radio-sub">QRUIT runs a fresh search each morning and surfaces new matches</div></div></label>
+        <label class="acm-radio"><input type="radio" name="src_sched"><div><div class="acm-radio-lbl">Weekly — Monday 08:00</div><div class="acm-radio-sub">Weekly digest of new candidate matches per active job</div></div></label>
+      </div>
+      <div class="acm-sep"></div>
+      <div class="acm-sec-lbl">Results cap per search</div>
+      <div class="acm-slider-wrap">
+        <input class="acm-slider" type="range" min="10" max="200" value="50" oninput="document.getElementById('acmSliderVal').textContent=this.value">
+        <div class="acm-slider-labels"><span>10</span><span id="acmSliderVal">50</span><span>200</span></div>
+      </div>`;
+    } else if(t==='messaging'){
+      h+=`
+      <div class="acm-sec-lbl">Connected account</div>
+      <div class="acm-field">
+        <div class="acm-lbl">${pid==='twilio'?'Twilio phone number':'Workspace / Number'}</div>
+        <input class="acm-inp" type="text" placeholder="${pid==='slack'?'#recruitment-channel':pid==='twilio'?'+44 7700 900000':'Business WhatsApp number'}">
+      </div>
+      <div class="acm-sep"></div>
+      <div class="acm-sec-lbl">What QRUIT processes</div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="acm-row"><div><div class="acm-row-lbl">Incoming CVs</div><div class="acm-row-sub">Document attachments and image CVs (OCR applied)</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="acm-row"><div><div class="acm-row-lbl">Text commands</div><div class="acm-row-sub">Messages matching QRUIT command syntax trigger actions</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="acm-row"><div><div class="acm-row-lbl">Pipeline update replies</div><div class="acm-row-sub">QRUIT sends stage change notifications here</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+      </div>
+      <div class="acm-sep"></div>
+      <div class="acm-sec-lbl">Auto-reply template</div>
+      <div class="acm-field">
+        <div class="acm-lbl">Message sent when a CV is received <em>optional</em></div>
+        <textarea class="acm-inp" style="height:72px;padding:8px 11px;resize:none" placeholder="Hi, thanks for sending your CV! QRUIT has received it and will be in touch shortly."></textarea>
+      </div>`;
+    } else if(t==='ats'){
+      h+=`
+      <div class="acm-sec-lbl">Pipeline to sync</div>
+      <div class="acm-field">
+        <div class="acm-lbl">Active pipeline</div>
+        <select class="acm-select"><option>Engineering — All Roles</option><option>Product</option><option>Sales</option><option>Operations</option></select>
+      </div>
+      <div class="acm-sec-lbl">Sync direction</div>
+      <div class="acm-radio-group">
+        <label class="acm-radio"><input type="radio" name="ats_dir" checked><div><div class="acm-radio-lbl">Bi-directional</div><div class="acm-radio-sub">Pull requisitions in, push shortlists out, reflect stage changes in both systems</div></div></label>
+        <label class="acm-radio"><input type="radio" name="ats_dir"><div><div class="acm-radio-lbl">QRUIT → ATS only</div><div class="acm-radio-sub">Push shortlisted candidates to the ATS; don't pull from it</div></div></label>
+        <label class="acm-radio"><input type="radio" name="ats_dir"><div><div class="acm-radio-lbl">ATS → QRUIT only</div><div class="acm-radio-sub">Import requisitions as QRUIT jobs; no candidate push-back</div></div></label>
+      </div>
+      <div class="acm-sep"></div>
+      <div class="acm-sec-lbl">Auto-push threshold</div>
+      <div class="acm-field">
+        <div class="acm-lbl">Only push candidates scoring above <em>QRUIT screening score</em></div>
+        <div class="acm-slider-wrap">
+          <input class="acm-slider" type="range" min="50" max="95" value="75" oninput="document.getElementById('acmAtsVal').textContent=this.value+'%'">
+          <div class="acm-slider-labels"><span>50%</span><span id="acmAtsVal">75%</span><span>95%</span></div>
+        </div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:0">
+        <div class="acm-row"><div><div class="acm-row-lbl">Auto-sync stage changes</div><div class="acm-row-sub">When a candidate moves stage in the ATS, reflect it in QRUIT pipeline</div></div><button class="acm-tog on" onclick="this.classList.toggle('on')"></button></div>
+        <div class="acm-row"><div><div class="acm-row-lbl">Create candidates automatically</div><div class="acm-row-sub">New ATS applicants become QRUIT candidates without manual import</div></div><button class="acm-tog" onclick="this.classList.toggle('on')"></button></div>
+      </div>`;
+    }
+    document.getElementById('acmMonBody').innerHTML=h;
+  }
+
+  function acmRunTest(){
+    const t=acmSt.type, pid=acmSt.prov;
+    const p=(ACMP[t]||[]).find(x=>x.id===pid)||{n:'Provider',a:'?',bg:'#333'};
+    const checks=[
+      ['Connecting to '+p.n+' API', 'Establishing secure TLS connection'],
+      ['Verifying credentials', 'Checking token validity and expiry'],
+      ['Checking read permissions', 'Confirming scopes match what QRUIT needs'],
+      ['Testing data access', 'Fetching a sample item to confirm access'],
+      ['Channel ready', 'All checks passed — QRUIT can monitor this source'],
+    ];
+    const listEl=document.getElementById('acmTestList');
+    listEl.innerHTML=checks.map((c,i)=>`
+      <div class="acm-test-item" id="acmTI${i}">
+        <div class="acm-test-ico" id="acmTIco${i}">○</div>
+        <div class="acm-test-text">
+          <div class="acm-test-lbl">${c[0]}</div>
+          <div class="acm-test-detail">${c[1]}</div>
+        </div>
+        <div class="acm-test-time" id="acmTT${i}"></div>
+      </div>`).join('');
+    // animate sequentially
+    const timings=[520,440,380,460,340];
+    let elapsed=0;
+    checks.forEach((_,i)=>{
+      setTimeout(()=>{
+        const item=document.getElementById('acmTI'+i);
+        const ico=document.getElementById('acmTIco'+i);
+        item.classList.add('running');
+        ico.textContent='◌';
+        setTimeout(()=>{
+          item.classList.remove('running');
+          item.classList.add('done');
+          ico.textContent='✓';
+          elapsed+=timings[i];
+          document.getElementById('acmTT'+i).textContent=(elapsed/1000).toFixed(2)+'s';
+          if(i===checks.length-1){
+            // show preview
+            acmShowPreview(p);
+            const nb=document.getElementById('acmTestNext');
+            if(nb) nb.disabled=false;
+            document.getElementById('acmTestTitle').textContent='Connection verified ✓';
+            document.getElementById('acmTestSub').textContent='All checks passed — this channel is ready to go live.';
+          }
+        }, timings[i]);
+      }, i===0?0:timings.slice(0,i).reduce((a,b)=>a+b,0)+i*200);
+    });
+  }
+
+  function acmShowPreview(p){
+    const previews={
+      email:['JD — Senior DevOps Engineer · CloudNine Ltd (PDF attachment)','CV — M. Webb — 9yr DevOps, Kubernetes, Terraform (DOCX)','Command — "Screen for Python backend roles in Leeds"'],
+      messaging:['CV received from +44 7911 000001 — image OCR complete','Command: "Status on CloudNine DevOps search?"','Pipeline update sent: Marcus Webb → Technical Interview'],
+      storage:['New file: JD_PlatformEngineer_v2.pdf → queued for screening','New file: CV_PriyaNair_2026.docx → screened, score 87','New file: JobBrief_SecurityEngineer.docx → processing'],
+      sourcing:['Found: 18 new LinkedIn profiles matching DevOps / Leeds / 5yr+','Found: 4 new Reed candidates — Python Backend, Manchester','Search complete: 22 matches surfaced for review'],
+      ats:['Imported 3 open requisitions from Greenhouse pipeline','Stage sync: Tom Adeyemi → Offer Stage (from ATS)','Pushed: Priya Nair (score 87) to Greenhouse shortlist'],
+    };
+    const rows=(previews[acmSt.type]||[]);
+    document.getElementById('acmPreviewRows').innerHTML=rows.map(r=>`
+      <div class="acm-preview-row"><div class="acm-preview-dot"></div>${r}</div>`).join('');
+    document.getElementById('acmPreviewCard').classList.add('show');
+  }
+
+  function acmRenderDone(){
+    const t=acmSt.type, pid=acmSt.prov;
+    const p=(ACMP[t]||[]).find(x=>x.id===pid)||{n:'Channel',a:'?',bg:'#333'};
+    document.getElementById('acmDoneTitle').textContent=p.n+' Connected';
+    document.getElementById('acmDoneSub').textContent='QRUIT is now monitoring this channel. You can adjust settings any time in the Channels view.';
+    const items=[
+      'Channel added to your workspace',
+      'Monitoring is live — no further action needed',
+      'Auto-processing is enabled for new content',
+      'You\'ll receive a notification for the first item QRUIT processes',
+    ];
+    document.getElementById('acmDoneCard').innerHTML=items.map(i=>`
+      <div class="acm-done-row"><div class="acm-done-dot"></div>${i}</div>`).join('');
+  }
+
+
+  
+
+</script>
+</body></html>

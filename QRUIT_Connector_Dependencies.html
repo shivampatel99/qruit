@@ -1,0 +1,510 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QRUIT Connector Dependencies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:opsz,wght@8..60,600;8..60,700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+  /* Single, explicit light theme: readable in any browser, mail client preview or print. */
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: #FFFFFF; color: #1B2333; font-family: "IBM Plex Sans", "Segoe UI", Arial, sans-serif; font-size: 15px; line-height: 1.65; }
+  a { color: #0B6E78; }
+  .page { max-width: 1040px; margin: 0 auto; padding: 40px 28px 80px; background: #FFFFFF; }
+  h1, h2, h3 { font-family: "Source Serif 4", Georgia, "Times New Roman", serif; color: #101827; margin: 0; line-height: 1.25; }
+  h1 { font-size: 32px; font-weight: 700; }
+  h2 { font-size: 24px; font-weight: 700; margin-top: 54px; padding: 22px 0 0; border-top: 2px solid #C9D3E0; }
+  h3 { font-size: 18px; font-weight: 600; margin-top: 30px; color: #0B6E78; }
+  h4 { font-family: "IBM Plex Sans", Arial, sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: #5A6780; margin: 24px 0 6px; }
+  p { margin: 12px 0; max-width: 78ch; }
+  ul, ol { margin: 8px 0; padding-left: 22px; max-width: 78ch; }
+  li { margin: 5px 0; }
+  code { font-family: "IBM Plex Mono", Consolas, "Courier New", monospace; font-size: 13px; background: #EEF2F7; color: #1B2333; padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+  pre { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 12.5px; background: #F3F6FA; border: 1px solid #D9E0EA; border-radius: 6px; padding: 12px 14px; overflow-x: auto; line-height: 1.55; margin: 12px 0; }
+  .eyebrow { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: #0B6E78; margin-bottom: 10px; }
+  .lede { font-size: 17px; color: #4B5769; max-width: 70ch; margin-top: 12px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 14px 36px; margin: 24px 0 0; padding: 16px 0; border-top: 1px solid #C9D3E0; border-bottom: 1px solid #C9D3E0; font-size: 14px; }
+  .meta b { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; color: #5A6780; margin-bottom: 2px; font-weight: 600; }
+  .note { border: 1px solid #C9D3E0; border-left: 5px solid #0B6E78; background: #F3F9FA; padding: 12px 16px; border-radius: 6px; margin: 16px 0; max-width: 78ch; }
+  .note.warn { border-left-color: #C77800; background: #FFF7E8; }
+  .note.crit { border-left-color: #B42A3B; background: #FDEEF0; }
+  .note b.t { display: block; font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; color: #1B2333; }
+  .wrap { overflow-x: auto; margin: 12px 0 6px; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; background: #FFFFFF; border: 1px solid #C9D3E0; }
+  th { text-align: left; font-size: 11.5px; text-transform: uppercase; letter-spacing: 0.08em; color: #3D4858; padding: 10px 12px; background: #EEF2F7; border-bottom: 1px solid #C9D3E0; border-right: 1px solid #DDE3EC; }
+  td { padding: 10px 12px; border-bottom: 1px solid #DDE3EC; border-right: 1px solid #DDE3EC; vertical-align: top; overflow-wrap: anywhere; }
+  th:last-child, td:last-child { border-right: none; }
+  tr:last-child td { border-bottom: none; }
+  td ol, td ul { margin: 4px 0; padding-left: 18px; }
+  td ol li { margin: 3px 0; }
+  .id { font-family: "IBM Plex Mono", Consolas, monospace; font-size: 12px; color: #0B6E78; font-weight: 500; white-space: nowrap; }
+  .pill { display: inline-block; font-size: 11px; font-weight: 600; padding: 1px 8px; border-radius: 999px; white-space: nowrap; }
+  .p0 { background: #FDEEF0; color: #8E1F2E; } .p1 { background: #FFF1D6; color: #7A4A00; } .p2 { background: #E3F2F4; color: #0A5A61; } .ok { background: #E2F3EA; color: #1F6B48; } .grey { background: #EEF2F7; color: #4B5769; }
+  .cards { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; margin: 16px 0; }
+  .card { border: 1px solid #C9D3E0; border-radius: 8px; padding: 14px 16px; background: #FAFBFD; }
+  .card h3 { margin: 0 0 6px; font-size: 16px; color: #101827; }
+  .card p { margin: 0; font-size: 14px; color: #4B5769; }
+  .steps { list-style: none; padding: 0; margin: 12px 0; max-width: 78ch; counter-reset: s; }
+  .steps li { counter-increment: s; position: relative; padding: 8px 0 8px 34px; border-bottom: 1px dashed #DDE3EC; }
+  .steps li::before { content: counter(s); position: absolute; left: 0; top: 10px; font-family: "IBM Plex Mono", monospace; font-size: 12px; color: #0B6E78; font-weight: 600; }
+  .toc { columns: 2; column-gap: 32px; font-size: 14px; margin: 16px 0 0; padding-left: 20px; }
+  .small { font-size: 13px; color: #4B5769; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid #C9D3E0; font-size: 13px; color: #4B5769; }
+  @media (max-width: 700px) { .page { padding: 22px 14px 60px; } h1 { font-size: 26px; } .toc { columns: 1; } }
+  @media print { h2 { break-before: page; } .page { padding: 0; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+<div class="eyebrow">QRUIT · AI recruitment agent · Integration guide</div>
+<h1>QRUIT Connector Dependencies</h1>
+<p class="lede">What each QRUIT connector does in Python, which packages it uses, and — for every external service — exactly which credentials, identifiers, permissions and settings are needed, where they are obtained, and how to verify the connection works.</p>
+
+<div class="meta">
+  <div><b>Scope</b>Gmail · Google Drive · Outlook · SharePoint / OneDrive · e-mail alerts · WhatsApp · Reqruit.ai APIs · local / shared folders · public host</div>
+  <div><b>Version</b>1 September 2026</div>
+  <div><b>Code</b><code>backend/app/channels/</code>, <code>backend/app/integrations/</code>, <code>backend/app/config.py</code></div>
+</div>
+
+<ol class="toc">
+  <li><a href="#s1">How QRUIT connectors work</a></li>
+  <li><a href="#s2">Python packages and the shared OAuth flow</a></li>
+  <li><a href="#s3">Gmail</a></li>
+  <li><a href="#s4">Google Drive</a></li>
+  <li><a href="#s5">Outlook (Microsoft 365 mail)</a></li>
+  <li><a href="#s6">SharePoint and OneDrive</a></li>
+  <li><a href="#s7">E-mail alerts to registered addresses</a></li>
+  <li><a href="#s8">WhatsApp Business (Meta Cloud API)</a></li>
+  <li><a href="#s9">Reqruit.ai deep-screening and interview APIs</a></li>
+  <li><a href="#s10">Local and shared folders, manual uploads</a></li>
+  <li><a href="#s11">Public host, network and secrets</a></li>
+  <li><a href="#s12">Choices that change the setup</a></li>
+  <li><a href="#s13">Complete checklist and configuration map</a></li>
+</ol>
+
+<!-- ─────────────────── 1 ─────────────────── -->
+<h2 id="s1">1. How QRUIT connectors work</h2>
+<p>A <em>connector</em> (called a <em>channel</em> in the code) is a small Python class that talks to one external service. Every connector implements the same five functions, so the rest of QRUIT does not care whether a CV came from Gmail, SharePoint or a folder on disk:</p>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:26%">Python function</th><th>What it does</th><th style="width:30%">Used by</th></tr></thead>
+  <tbody>
+    <tr><td><code>auth_status()</code> / <code>status_detail()</code></td><td>Reports <code>ready</code>, <code>needs_auth</code> (no token yet or a permission missing) or <code>error</code> (credentials not configured) with a human sentence.</td><td>Channels page, Inbox storage tabs</td></tr>
+    <tr><td><code>pull(query=, limit=, folder=)</code></td><td>Lists candidate items on the service — messages with attachments, files in a folder — applying the service's own search/filter syntax. Returns <code>InboundItem</code> records (name, sender, subject, size, received time, opaque reference).</td><td>Inbox → Pull now / Sync All / Process folder; the job agent; the chat tool <code>pull_channel</code></td></tr>
+    <tr><td><code>fetch(item_id, dest_dir)</code></td><td>Downloads one item to disk so it can be converted to DOCX/text, classified (JD / CV / command) and de-duplicated.</td><td>Ingestion pipeline</td></tr>
+    <tr><td><code>browse(path)</code></td><td>Storage services only: one level of the folder tree with JD/CV detection counts, so a user can pick a folder to process.</td><td>Inbox → Storage tab</td></tr>
+    <tr><td><code>send(OutboundMessage)</code></td><td>Sends a rendered message (subject, body, optional attachments) and returns a receipt with the provider's message id.</td><td>Delivery service — only after a human approval token exists</td></tr>
+  </tbody>
+</table>
+</div>
+<div class="note"><b class="t">Two rules that shape every dependency below</b>
+<strong>Pull on request.</strong> QRUIT never keeps a mailbox subscription, folder watcher or webhook open; it queries a service when a person or the job agent asks. <strong>Send after approval.</strong> Every outbound message waits for a human to approve a checkpoint in the console. Consequently the connectors need read scopes plus a send scope, and nothing that grants write access to files, labels or settings.</div>
+
+<!-- ─────────────────── 2 ─────────────────── -->
+<h2 id="s2">2. Python packages and the shared OAuth flow</h2>
+<h3>Packages already in use</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:22%">Package</th><th style="width:22%">Purpose</th><th>Notes</th></tr></thead>
+  <tbody>
+    <tr><td><code>httpx</code></td><td>All HTTP calls (Gmail, Drive, Graph, Meta, Reqruit.ai)</td><td>The connectors call the REST APIs directly; no vendor SDK is required. Async client, 30–60 s timeouts.</td></tr>
+    <tr><td><code>cryptography</code> (Fernet)</td><td>Encrypts OAuth tokens at rest</td><td>Key derived from <code>QRUIT_APPROVAL_SECRET</code>; tokens live in the <code>channel_accounts</code> table.</td></tr>
+    <tr><td><code>pydantic</code></td><td><code>InboundItem</code>, <code>OutboundMessage</code>, <code>BrowseResult</code> models</td><td>Shared shapes between connectors and the ingestion pipeline.</td></tr>
+    <tr><td><code>python-docx</code>, <code>pypdf</code> (+ optional <code>pytesseract</code>)</td><td>Normalise fetched files to DOCX + text; OCR for image CVs</td><td>Reqruit.ai accepts DOCX only, so every file is converted after fetch.</td></tr>
+    <tr><td>Standard library: <code>email.message</code>, <code>base64</code>, <code>json</code>, <code>secrets</code>, <code>hashlib</code></td><td>MIME building for Gmail send, PKCE, opaque item references</td><td>—</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="small">Optional alternatives if a team prefers vendor SDKs: <code>google-api-python-client</code> + <code>google-auth</code> (Google), <code>msal</code> + <code>msgraph-sdk</code> (Microsoft). They are not needed for the current code and would add nothing functionally; they are mentioned so the dependency choice is a conscious one.</p>
+
+<h3>The OAuth 2.0 flow both Google and Microsoft connectors use</h3>
+<p>Gmail, Google Drive, Outlook and SharePoint all authenticate the same way — <em>authorization code with PKCE</em>, performed once by a person, after which a refresh token lets QRUIT work unattended. The code lives in <code>backend/app/channels/oauth_base.py</code>.</p>
+<ol class="steps">
+  <li><code>authorize_url()</code> builds the provider's consent URL with the client ID, the requested scopes, a random <code>state</code> and a PKCE <code>code_challenge</code>; the console opens it in a popup when a user clicks <strong>Connect</strong>.</li>
+  <li>The user signs in as the recruiting account and accepts the scopes. The provider redirects to <code>{QRUIT host}/api/oauth/callback?code=…&amp;state=…</code>. This redirect URI must be registered with the provider exactly (see each service).</li>
+  <li><code>handle_callback()</code> exchanges the code (plus the PKCE verifier and client secret) for an <strong>access token</strong> and a <strong>refresh token</strong>, asks the provider who the account is, and stores the token blob encrypted.</li>
+  <li><code>access_token()</code> refreshes automatically two minutes before expiry using the refresh token — no human involvement after step 2.</li>
+  <li><code>auth_status()</code> compares the scopes actually granted with the scopes the connector requires; if a send scope is missing it reports <code>needs_auth</code> and the console shows <em>reconnect to grant send permission</em>.</li>
+</ol>
+<div class="note"><b class="t">What that means for provisioning</b>For each provider we need: (1) an application registration that yields a <strong>client ID + client secret</strong>, (2) the <strong>redirect URI(s)</strong> registered on that application, (3) the <strong>scopes/permissions</strong> approved, (4) an <strong>account to sign in with</strong> that can see the mail and folders in question. Everything else is derived at runtime.</div>
+
+<!-- ─────────────────── 3 ─────────────────── -->
+<h2 id="s3">3. Gmail</h2>
+<h3>What the connector does</h3>
+<p><code>GmailChannel</code> in <code>backend/app/channels/google.py</code>. <code>pull()</code> runs a Gmail search (default <code>newer_than:90d has:attachment</code>, or any query the user types, e.g. <code>from:agency.com subject:CV label:QRUIT</code>), reads each matching message, and lists every attachment; when a query is given it also returns plain-text bodies (pasted JDs, reply commands such as PROCEED). <code>fetch()</code> downloads the attachment bytes. <code>send()</code> builds an RFC-2822 MIME message (with PDF attachments for reports) and sends it from the connected mailbox.</p>
+
+<h4>API calls made</h4>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:42%">Call</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET https://gmail.googleapis.com/gmail/v1/users/me/messages?q=…&amp;maxResults=…</code></td><td>Search / filter</td></tr>
+    <tr><td><code>GET …/users/me/messages/{id}?format=full</code></td><td>Headers (from, subject, date), attachment parts, text body</td></tr>
+    <tr><td><code>GET …/users/me/messages/{id}/attachments/{attachmentId}</code></td><td>Download attachment (base64url)</td></tr>
+    <tr><td><code>POST …/users/me/messages/send</code> with <code>{"raw": base64url(MIME)}</code></td><td>Send approved message</td></tr>
+    <tr><td><code>GET https://openidconnect.googleapis.com/v1/userinfo</code></td><td>Account e-mail shown as "Connected as …"</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Credentials and information required</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it</th></tr></thead>
+  <tbody>
+    <tr><td class="id">GM-1</td><td>Google Cloud project with the Gmail API enabled</td><td>— (container for the client)</td><td><ol><li>Open <a href="https://console.cloud.google.com">console.cloud.google.com</a> with an account in the organisation's Google Workspace.</li><li>Create a project, e.g. <em>qruit-recruitment-agent</em>.</li><li>APIs &amp; Services → Library → enable <strong>Gmail API</strong> (and <strong>Google Drive API</strong>, needed for §4).</li></ol></td></tr>
+    <tr><td class="id">GM-2</td><td>OAuth consent screen, user type <strong>Internal</strong></td><td>—</td><td><ol><li>APIs &amp; Services → OAuth consent screen.</li><li>User type <strong>Internal</strong> (only possible inside Workspace). App name "QRUIT Recruitment Agent", support e-mail, developer contact.</li><li>Add the scopes in the table below.</li></ol><span class="small">Why Internal: <code>gmail.readonly</code> and <code>drive.readonly</code> are <em>restricted</em> scopes. An External app must pass Google's security assessment before production use; an Internal app is exempt.</span></td></tr>
+    <tr><td class="id">GM-3</td><td>OAuth client ID and client secret (type <strong>Web application</strong>)</td><td><code>GOOGLE_CLIENT_ID</code>, <code>GOOGLE_CLIENT_SECRET</code></td><td><ol><li>APIs &amp; Services → Credentials → Create credentials → OAuth client ID → Web application.</li><li>Authorised redirect URIs: <code>http://localhost:8787/api/oauth/callback</code> for development and <code>https://&lt;qruit-host&gt;/api/oauth/callback</code> for production (host from §11).</li><li>Copy the client ID and secret; hand them over through the secrets channel (§11), never by e-mail or chat.</li></ol></td></tr>
+    <tr><td class="id">GM-4</td><td>App allowed by Workspace API controls</td><td>—</td><td>Admin console → Security → Access and data control → API controls → Manage third-party app access → add the client ID as <strong>Trusted</strong>. Skip if the organisation does not restrict unconfigured apps; otherwise sign-in fails with "app blocked".</td></tr>
+    <tr><td class="id">GM-5</td><td>The mailbox to connect</td><td>Chosen at Connect time</td><td>A dedicated licensed user such as <code>recruiting@&lt;domain&gt;</code> is recommended (survives staff changes, clean audit trail). The person clicking Connect signs in as this account. Confirm it has 2-step verification set up so the consent flow is not interrupted.</td></tr>
+    <tr><td class="id">GM-6</td><td>Optional: a Gmail label + filter for inbound CVs</td><td>Used in the pull query</td><td>Gmail settings → Filters → e.g. "has attachment AND (subject contains CV OR resume)" → apply label <code>QRUIT/Inbound</code>. QRUIT can then search <code>label:QRUIT/Inbound</code> instead of the whole mailbox.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h4>Scopes requested at consent</h4>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:38%">Scope</th><th style="width:12%">Class</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td><code>openid</code>, <code>email</code></td><td>basic</td><td>Identify the connected account.</td></tr>
+    <tr><td><code>https://www.googleapis.com/auth/gmail.readonly</code></td><td>restricted</td><td>Search, read messages, download attachments. Read-only — QRUIT never labels, archives or deletes.</td></tr>
+    <tr><td><code>https://www.googleapis.com/auth/gmail.send</code></td><td>sensitive</td><td>Send approved messages from the mailbox. No access to drafts, settings or other mail.</td></tr>
+  </tbody>
+</table>
+</div>
+<p class="small">The consent URL also sets <code>access_type=offline</code> and <code>prompt=consent</code> so Google issues a refresh token on the first sign-in.</p>
+
+<h3>Verify</h3>
+<ol class="steps">
+  <li>Add <code>GOOGLE_CLIENT_ID</code> and <code>GOOGLE_CLIENT_SECRET</code> to <code>backend/.env</code>, restart QRUIT.</li>
+  <li>Console → Channels → <em>Gmail (account)</em> → <strong>Connect</strong> → sign in as GM-5 → card reads "Connected as recruiting@…".</li>
+  <li>Inbox → <em>Pull now</em> (Gmail): attachments from recent mail appear as documents classified JD / CV.</li>
+  <li>Channels → <em>Send test</em> to your own address: the mail arrives from the recruiting mailbox.</li>
+</ol>
+
+<!-- ─────────────────── 4 ─────────────────── -->
+<h2 id="s4">4. Google Drive</h2>
+<h3>What the connector does</h3>
+<p><code>GoogleDriveChannel</code>, same file and same OAuth client as Gmail. <code>browse(folder_id)</code> lists sub-folders and files one level down (with a filename-based JD/CV guess), <code>pull(folder=…)</code> lists files of CV/JD MIME types under a folder (optionally <code>name contains</code> a search term), <code>fetch()</code> downloads the file content. Read-only; there is no <code>send()</code>.</p>
+
+<h4>API calls made</h4>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:52%">Call</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET https://www.googleapis.com/drive/v3/files?q='&lt;folder&gt;' in parents and trashed = false&amp;fields=files(id,name,size,modifiedTime,mimeType)</code></td><td>Browse a folder</td></tr>
+    <tr><td><code>GET …/drive/v3/files?q=mimeType = 'application/pdf' or … and name contains '…'</code></td><td>Filter files to pull</td></tr>
+    <tr><td><code>GET …/drive/v3/files/{id}?alt=media</code></td><td>Download</td></tr>
+    <tr><td><code>GET …/drive/v3/files/{id}?fields=id,name</code></td><td>Breadcrumb names</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Credentials and information required</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it</th></tr></thead>
+  <tbody>
+    <tr><td class="id">GD-1</td><td>Google Drive API enabled + scope <code>https://www.googleapis.com/auth/drive.readonly</code> on the consent screen</td><td>Same client as GM-3</td><td>Done as part of GM-1/GM-2. One Connect covers Gmail and Drive because both scopes are requested together.</td></tr>
+    <tr><td class="id">GD-2</td><td>Folder ID(s) of the recruitment folders</td><td><code>GOOGLE_DRIVE_FOLDER_ID</code> (optional default) or picked in the Storage tab</td><td>Open the folder in Drive; the ID is the last segment of the URL <code>https://drive.google.com/drive/folders/<strong>1AbC…</strong></code>. Share the folder with the mailbox from GM-5 (Viewer is enough).</td></tr>
+    <tr><td class="id">GD-3</td><td>Whether the folders live on a <strong>shared drive</strong></td><td>—</td><td>Check the left-hand navigation in Drive: "My Drive" vs "Shared drives". Shared drives need <code>supportsAllDrives=true</code> / <code>includeItemsFromAllDrives=true</code> on the list calls and the shared-drive ID as the root — a small connector change; see §12 C4.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Verify</h3>
+<ol class="steps">
+  <li>After the Gmail connect, Inbox → Storage → <em>Google Drive (account)</em> shows the folder tree.</li>
+  <li>Select a folder: the side panel counts detected JDs and CVs; <strong>Process with QRUIT</strong> pulls it into a role.</li>
+</ol>
+
+<!-- ─────────────────── 5 ─────────────────── -->
+<h2 id="s5">5. Outlook (Microsoft 365 mail)</h2>
+<h3>What the connector does</h3>
+<p><code>OutlookChannel</code> in <code>backend/app/channels/microsoft.py</code>, on Microsoft Graph v1.0 as the signed-in user (<code>/me</code>). <code>pull()</code> lists messages that have attachments (or, with a query, runs a Graph <code>$search</code>), reads attachment metadata and body previews; <code>fetch()</code> downloads attachment bytes; <code>send()</code> posts to <code>sendMail</code> with attachments and saves to Sent Items.</p>
+
+<h4>API calls made</h4>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:52%">Call</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET https://graph.microsoft.com/v1.0/me</code></td><td>Account label</td></tr>
+    <tr><td><code>GET /me/messages?$filter=hasAttachments eq true&amp;$orderby=receivedDateTime desc&amp;$select=…</code></td><td>List recent messages with attachments</td></tr>
+    <tr><td><code>GET /me/messages?$search="…"</code></td><td>Free-text filter (subject, sender, body)</td></tr>
+    <tr><td><code>GET /me/messages/{id}/attachments</code> · <code>GET /me/messages/{id}/attachments/{id}/$value</code></td><td>Attachment list / download</td></tr>
+    <tr><td><code>POST /me/sendMail</code> (<code>saveToSentItems: true</code>)</td><td>Send approved message</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Credentials and information required</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it</th></tr></thead>
+  <tbody>
+    <tr><td class="id">MS-1</td><td>Entra ID app registration: <strong>Application (client) ID</strong> and <strong>Directory (tenant) ID</strong></td><td><code>MS_CLIENT_ID</code>, <code>MS_TENANT</code></td><td><ol><li>Open <a href="https://entra.microsoft.com">entra.microsoft.com</a> (or the Azure portal) → Identity → Applications → App registrations → New registration.</li><li>Name "QRUIT Recruitment Agent"; supported account types: <strong>Accounts in this organizational directory only</strong> (single tenant).</li><li>Redirect URI, platform <strong>Web</strong>: <code>http://localhost:8787/api/oauth/callback</code>; add <code>https://&lt;qruit-host&gt;/api/oauth/callback</code> under Authentication for production.</li><li>Copy the Application (client) ID and Directory (tenant) ID from the Overview page.</li></ol></td></tr>
+    <tr><td class="id">MS-2</td><td><strong>Client secret</strong> (value + expiry date)</td><td><code>MS_CLIENT_SECRET</code></td><td>Certificates &amp; secrets → New client secret → 12 or 24 months → copy the <em>Value</em> immediately (it is shown once). Record the expiry so rotation is calendared.</td></tr>
+    <tr><td class="id">MS-3</td><td>Delegated permissions with <strong>admin consent</strong></td><td>—</td><td><ol><li>API permissions → Add a permission → Microsoft Graph → Delegated: <code>openid</code>, <code>email</code>, <code>offline_access</code>, <code>User.Read</code>, <code>Mail.Read</code>, <code>Mail.Send</code>, <code>Files.Read.All</code>, <code>Sites.Read.All</code>.</li><li>Click <strong>Grant admin consent for &lt;tenant&gt;</strong> (requires a Global/Privileged Role admin). Without it, <code>Files.Read.All</code> and <code>Sites.Read.All</code> prompt "needs admin approval" and the connect fails.</li></ol></td></tr>
+    <tr><td class="id">MS-4</td><td>Conditional Access compatible with unattended refresh</td><td>—</td><td>Ask the identity team whether policies on the connecting account enforce sign-in frequency or block persistent sessions. Refresh tokens are silently invalidated by such policies; either exempt the app/account or plan a periodic re-connect.</td></tr>
+    <tr><td class="id">MS-5</td><td>The mailbox to connect</td><td>Chosen at Connect time</td><td>Dedicated user mailbox recommended (e.g. <code>recruiting@&lt;domain&gt;</code>). A <em>shared</em> mailbox needs the <code>Mail.Read.Shared</code> / <code>Mail.Send.Shared</code> permissions and the connector to call <code>/users/{mailbox}</code> instead of <code>/me</code> — see §12 C1.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h4>Permissions requested and why</h4>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:26%">Permission (delegated)</th><th style="width:14%">Admin consent</th><th>Why</th></tr></thead>
+  <tbody>
+    <tr><td><code>openid</code>, <code>email</code>, <code>User.Read</code></td><td>no</td><td>Identify the account.</td></tr>
+    <tr><td><code>offline_access</code></td><td>no</td><td>Refresh token — sign in once.</td></tr>
+    <tr><td><code>Mail.Read</code></td><td>no</td><td>List, search and download attachments. Read-only.</td></tr>
+    <tr><td><code>Mail.Send</code></td><td>no</td><td>Send approved messages; copies land in Sent Items for the audit trail.</td></tr>
+    <tr><td><code>Files.Read.All</code></td><td><strong>yes</strong></td><td>Browse/download OneDrive and SharePoint files the account can see (§6).</td></tr>
+    <tr><td><code>Sites.Read.All</code></td><td><strong>yes</strong></td><td>Resolve a SharePoint site and read its document library (§6).</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Verify</h3>
+<ol class="steps">
+  <li><code>MS_CLIENT_ID</code>, <code>MS_CLIENT_SECRET</code>, <code>MS_TENANT=&lt;tenant-id&gt;</code> in <code>backend/.env</code>; restart.</li>
+  <li>Channels → <em>Outlook (account)</em> → <strong>Connect</strong>: no consent prompt appears (proves MS-3) and the card reads "Connected as …".</li>
+  <li>Inbox → <em>Pull now</em> (Outlook) returns attachments; <em>Send test</em> arrives and shows in Sent Items.</li>
+</ol>
+
+<!-- ─────────────────── 6 ─────────────────── -->
+<h2 id="s6">6. SharePoint and OneDrive</h2>
+<h3>What the connector does</h3>
+<p><code>SharePointChannel</code>, same file and same app registration as Outlook. With a site ID it reads that site's default document library; without one it reads the signed-in user's OneDrive. <code>browse(path)</code> walks folders by path, <code>pull(folder=…)</code> lists files under a path, <code>fetch()</code> downloads content. Read-only.</p>
+
+<h4>API calls made</h4>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:52%">Call</th><th>Purpose</th></tr></thead>
+  <tbody>
+    <tr><td><code>GET /sites/{hostname}:/sites/{site-path}</code></td><td>Resolve the site ID from its URL</td></tr>
+    <tr><td><code>GET /sites/{site-id}/drive/root:/{folder-path}:/children</code> (or <code>/me/drive/root:/{path}:/children</code>)</td><td>Browse / list</td></tr>
+    <tr><td><code>GET /sites/{site-id}/drive/items/{item-id}/content</code></td><td>Download</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Credentials and information required</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it</th></tr></thead>
+  <tbody>
+    <tr><td class="id">SP-1</td><td>Site ID of the recruitment site</td><td><code>SHAREPOINT_SITE_ID</code></td><td><ol><li>Note the site URL, e.g. <code>https://contoso.sharepoint.com/sites/Recruitment</code>.</li><li>With any signed-in Graph token (Graph Explorer at <a href="https://developer.microsoft.com/graph/graph-explorer">developer.microsoft.com/graph/graph-explorer</a> works), call <code>GET https://graph.microsoft.com/v1.0/sites/contoso.sharepoint.com:/sites/Recruitment</code>.</li><li>Copy the <code>id</code> field (format <code>hostname,siteCollectionId,siteId</code>).</li></ol>Leave empty to use the connecting user's OneDrive instead.</td></tr>
+    <tr><td class="id">SP-2</td><td>Folder path inside the default document library</td><td><code>SHAREPOINT_FOLDER_PATH</code></td><td>e.g. <code>Active Roles</code> or <code>Recruitment/2026</code> — relative to the library root ("Documents"). Can also be picked interactively in the Storage tab.</td></tr>
+    <tr><td class="id">SP-3</td><td>Read access for the connecting account</td><td>—</td><td>Site owner → Site permissions → add the mailbox account (MS-5) as <em>Visitor</em>/Read on the site or library.</td></tr>
+    <tr><td class="id">SP-4</td><td>Non-default library or team-site drive</td><td>—</td><td>If CVs live in a second library, provide its name; the connector currently reads the site's default drive (<code>/sites/{id}/drive</code>) — a one-line change to <code>/sites/{id}/drives/{drive-id}</code>.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Verify</h3>
+<ol class="steps">
+  <li>Set <code>SHAREPOINT_SITE_ID</code> / <code>SHAREPOINT_FOLDER_PATH</code>; restart (the Outlook connect already covers the token).</li>
+  <li>Inbox → Storage → <em>SharePoint (account)</em>: the library folder tree appears; select a folder → <strong>Process with QRUIT</strong>.</li>
+</ol>
+
+<!-- ─────────────────── 7 ─────────────────── -->
+<!-- ─────────────────── 7 ─────────────────── -->
+<h2 id="s7">7. E-mail alerts to registered addresses</h2>
+<h3>What QRUIT sends, to whom, through which connector</h3>
+<p>QRUIT does not run a separate mail server. Every alert is rendered from a template in <code>backend/app/services/templates.py</code> and handed to <code>DeliveryService.send()</code>, which picks the first <em>ready</em> connector that can send to the recipient: for an e-mail address that is the connected Gmail or Outlook mailbox (§3, §5); for a phone number it is WhatsApp (§8). Until a mailbox is connected (or while <code>QRUIT_EMAIL_MOCK=true</code>) messages are written to <code>backend/data/outbox/</code> instead of being sent, so the pipeline can be exercised safely.</p>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:20%">Alert (template)</th><th style="width:26%">Recipient — where the address is registered</th><th>When it is sent</th><th style="width:16%">Approval gate</th></tr></thead>
+  <tbody>
+    <tr><td><code>checkpoint_request</code></td><td>Client contact — <em>Client contact</em> field on the role (<code>metadata.client_contact</code>)</td><td>Each time the agent pauses at a module boundary (M1–M4) and needs a decision; the mail explains what will happen next and accepts reply commands PROCEED / PAUSE / REVISE WEIGHTS / SKIP INTERVIEW</td><td>Sent automatically (it <em>is</em> the request)</td></tr>
+    <tr><td><code>status_update</code></td><td>Client contact</td><td>On request from the console, the chat (<code>send_status_update</code>) or the agent; also the SLA reminder when an approval has been waiting longer than <code>sla_hours</code></td><td>Guided mode: waits for approval</td></tr>
+    <tr><td><code>gap_question</code></td><td>Client contact</td><td>When the standardised JD is missing salary, location or seniority</td><td>Guided mode: waits for approval</td></tr>
+    <tr><td><code>client_jd_confirmation</code></td><td>Client contact</td><td>Optional confirmation of the parsed JD before screening</td><td>Guided mode: waits for approval</td></tr>
+    <tr><td><code>report_email</code> (+ PDF attachment)</td><td>Client contact</td><td>Delivery of the final recommendation report after the M4 approval</td><td>Always after the M4 approval</td></tr>
+    <tr><td><code>candidate_ack</code>, <code>interview_invite</code>, <code>interview_reminder</code>, <code>interview_nudge</code></td><td>Candidate — e-mail extracted from the CV (or the sender address of the mail that carried it)</td><td>After standardisation; after the shortlist approval; before a booked slot; when an invitation is unanswered</td><td>Guided mode: each waits for approval</td></tr>
+    <tr><td>Recruiter alerts</td><td>Workspace <em>Notification e-mail</em> (Settings → <code>notify_email</code>)</td><td>Planned: a copy of every checkpoint request and delivery receipt to the recruiter's own inbox. The address is stored today; the send is a small follow-up change.</td><td>—</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Requirements for sending alerts through Gmail or Outlook</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it / details</th></tr></thead>
+  <tbody>
+    <tr><td class="id">AL-1</td><td>A connected sender mailbox with the send scope</td><td>Gmail: <code>gmail.send</code> (GM-3); Outlook: <code>Mail.Send</code> (MS-3)</td><td>Alerts go out <em>as</em> the connected mailbox, so it should be the address clients and candidates expect to see (e.g. <code>recruiting@&lt;domain&gt;</code>). If the scope was not granted at the first Connect, the Channels page shows <em>reconnect to grant send permission</em>.</td></tr>
+    <tr><td class="id">AL-2</td><td><code>QRUIT_EMAIL_MOCK=false</code></td><td><code>backend/.env</code></td><td>Switches from the local outbox to the connected mailbox. Keep <code>true</code> in development so no real mail leaves.</td></tr>
+    <tr><td class="id">AL-3</td><td>Registered recipient addresses</td><td>Per role: <em>Client contact</em>; workspace: <em>Notification e-mail</em></td><td>Set on the New Role form, the role's Settings tab, or via chat (<code>update_job client_contact=…</code>). A role without a client contact simply skips client alerts (the console still shows the approval). Ask the client for a single, monitored address — reply commands from that address are matched to the role.</td></tr>
+    <tr><td class="id">AL-4</td><td>Deliverability: SPF, DKIM and DMARC for the sending domain</td><td>DNS (domain owner)</td><td>Mail sent through Gmail/Graph is signed by Google/Microsoft; the domain still needs a published SPF record that includes them (<code>include:_spf.google.com</code> or <code>include:spf.protection.outlook.com</code>), DKIM enabled in the admin console, and a DMARC policy (<code>p=quarantine</code> or stricter). Without these, invitations to candidates land in spam.</td></tr>
+    <tr><td class="id">AL-5</td><td>Display name and, optionally, a different From address</td><td>Mailbox settings</td><td>Gmail: Settings → Accounts → "Send mail as" alias, verified; Outlook: a shared-mailbox alias with <em>Send As</em> rights. The connector sends from the signed-in account by default.</td></tr>
+    <tr><td class="id">AL-6</td><td>Sending limits</td><td>—</td><td>Google Workspace: about 2,000 messages / day per account (500 for trial accounts); Microsoft 365: 10,000 recipients / day and 30 messages / minute. QRUIT's volume is small (a handful per candidate), but bulk backfills should stay within these.</td></tr>
+    <tr><td class="id">AL-7</td><td>Bounce and reply handling</td><td>—</td><td>There is no listener: bounces and replies arrive in the sender mailbox and are picked up on the next <em>Pull</em>. Reply commands (PROCEED, PAUSE, …) are recognised then and applied to the matching role; failed sends are recorded on the message with status <code>failed</code> and shown in the console.</td></tr>
+    <tr><td class="id">AL-8</td><td>Consent and footer text for candidate e-mails</td><td>Templates</td><td>Candidate messages should carry the agency's legal footer and a contact address; confirm wording with the data-protection owner. Templates are plain text with <code>$placeholders</code> and can be edited without code changes to the connectors.</td></tr>
+    <tr><td class="id">AL-9</td><td><em>Alternative without OAuth:</em> SMTP relay</td><td>Not implemented</td><td>If a mailbox cannot be connected, alerts could go through Google's SMTP relay (<code>smtp-relay.gmail.com</code>, IP-allow-listed) or Microsoft's SMTP AUTH client submission (<code>smtp.office365.com:587</code>, requires SMTP AUTH enabled on the mailbox and an app password / OAuth). This would be a small additional connector using <code>smtplib</code>; it cannot pull mail.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Verify</h3>
+<ol class="steps">
+  <li>Connect Gmail or Outlook with the send scope (§3 / §5); set <code>QRUIT_EMAIL_MOCK=false</code>; restart.</li>
+  <li>Create a role with your own address as <em>Client contact</em>, upload two CVs, run in Semi-Auto: the <code>checkpoint_request</code> mail arrives from the recruiting mailbox.</li>
+  <li>Reply <strong>PROCEED</strong> from that address, then Inbox → <em>Pull now</em>: the reply is classified as a command and the role moves on.</li>
+  <li>Send a test from the Channels page to an external domain (e.g. a personal address) and check it is not flagged as spam (proves AL-4).</li>
+</ol>
+
+<h2 id="s8">8. WhatsApp Business (Meta Cloud API)</h2>
+<h3>What the connector does</h3>
+<p><code>WhatsAppChannel</code> in <code>backend/app/channels/whatsapp.py</code> with an <code>HttpTransport</code>: <code>send()</code> posts a text or template message to <code>https://graph.facebook.com/v20.0/{phone-number-id}/messages</code> with a bearer token and returns the <code>wamid</code>. Used for interview invitations, reminders and the client digest.</p>
+<div class="note warn"><b class="t">Inbound is different from the other connectors</b>The Cloud API has <strong>no endpoint to list received messages</strong>; Meta delivers them only to a webhook. Because QRUIT is pull-only by design, WhatsApp is <strong>send-only</strong> when live and <code>pull()</code> returns nothing. Receiving CVs or reply commands over WhatsApp requires the webhook items WA-6/WA-7 and a decision (§12 C3).</div>
+
+<h3>Credentials and information required</h3>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it</th></tr></thead>
+  <tbody>
+    <tr><td class="id">WA-1</td><td>Verified Meta Business Manager and a <strong>WhatsApp Business Account (WABA)</strong></td><td>WABA ID (for reference)</td><td><a href="https://business.facebook.com">business.facebook.com</a> → Business settings → Security centre → complete <strong>Business verification</strong> (legal documents; takes days). Then WhatsApp Accounts → the WABA ID is shown in its settings.</td></tr>
+    <tr><td class="id">WA-2</td><td>Dedicated phone number → <strong>Phone Number ID</strong></td><td><code>WHATSAPP_PHONE_ID</code></td><td>The number must not be registered in the consumer or Business <em>app</em>. Add it under WhatsApp Manager → Phone numbers, verify by SMS/voice, set display name (e.g. "Dhiveda Recruiting"). The <strong>Phone number ID</strong> (a long numeric id, not the phone number) is shown in the number's details and in the Meta app dashboard → WhatsApp → API Setup.</td></tr>
+    <tr><td class="id">WA-3</td><td>Meta app with the WhatsApp product</td><td>App ID (for reference)</td><td><a href="https://developers.facebook.com/apps">developers.facebook.com/apps</a> → Create app (type Business) → Add product → WhatsApp → link the WABA. Switch the app to <strong>Live</strong> mode for production.</td></tr>
+    <tr><td class="id">WA-4</td><td><strong>Permanent system-user access token</strong></td><td><code>WHATSAPP_TOKEN</code></td><td>Business settings → Users → System users → Add (role Admin or Employee) → Assign assets: the WhatsApp account (full control) and the app → Generate token → select permissions <code>whatsapp_business_messaging</code> and <code>whatsapp_business_management</code> → token expiry <em>Never</em>. The 24-hour token from API Setup is for testing only.</td></tr>
+    <tr><td class="id">WA-5</td><td>Approved <strong>message templates</strong></td><td>Template names used in <code>services/templates.py</code></td><td>WhatsApp Manager → Message templates → Create: <code>interview_invite</code>, <code>interview_reminder</code>, <code>status_update</code>, <code>report_digest</code> (category Utility, language en). Business-initiated messages outside a 24-hour conversation window must be templates; approval usually takes minutes to hours. QRUIT supplies the wording with placeholders ({{1}} name, {{2}} role, {{3}} link).</td></tr>
+    <tr><td class="id">WA-6</td><td><em>Only if inbound is wanted:</em> webhook URL + verify token</td><td>To be built: <code>/webhooks/whatsapp</code></td><td>App dashboard → WhatsApp → Configuration → Callback URL <code>https://&lt;qruit-host&gt;/webhooks/whatsapp</code>, verify token generated by QRUIT, subscribe to the <code>messages</code> field.</td></tr>
+    <tr><td class="id">WA-7</td><td><em>Only if inbound is wanted:</em> media download</td><td>—</td><td>Documents arrive as media IDs; the connector would call <code>GET /{media-id}</code> then download the returned URL (host <code>lookaside.fbsbx.com</code>) with the same token.</td></tr>
+    <tr><td class="id">WA-8</td><td>Test recipients</td><td>—</td><td>App dashboard → WhatsApp → API Setup → add up to five recipient numbers for testing before the number is used with real candidates.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Verify</h3>
+<ol class="steps">
+  <li><code>WHATSAPP_MOCK=false</code>, <code>WHATSAPP_TOKEN</code>, <code>WHATSAPP_PHONE_ID</code> in <code>backend/.env</code>; restart.</li>
+  <li>Channels → WhatsApp → <em>Send test</em> to a WA-8 number: message received; the console shows the returned message id.</li>
+  <li>Run a job in Guided mode: approve the interview invitation; the template message arrives.</li>
+</ol>
+
+<!-- ─────────────────── 8 ─────────────────── -->
+<h2 id="s9">9. Reqruit.ai deep-screening and interview APIs</h2>
+<h3>What the clients do</h3>
+<p><code>ReqruitClient</code> (<code>backend/app/integrations/reqruit_client.py</code>) submits JD and CV files <em>by URL</em> for extraction and deep screening, then polls for results; <code>ReqruitInterviewProvider</code> (<code>interview_client.py</code>) drives the turn-based AI interview. Both are plain <code>httpx</code> calls with a bearer token; both are mocked until the switches below are flipped.</p>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it / details</th></tr></thead>
+  <tbody>
+    <tr><td class="id">RQ-1</td><td>Deep-screening API token and base URL</td><td><code>REQRUIT_AUTH_TOKEN</code>, <code>REQRUIT_BASE_URL</code> (default <code>https://deep-screening.reqruit.ai</code>), <code>QRUIT_MOCK_API=false</code></td><td>Issued by the Reqruit.ai platform owners. Endpoints used: <code>POST /jd/extract</code>, <code>POST /resume/extract</code>, <code>POST /deep-screening/run</code>, <code>GET /results/jd</code>, <code>/results/resume</code>, <code>/results/deep-screening</code>. Confirm rate limits and whether the token is per-client.</td></tr>
+    <tr><td class="id">RQ-2</td><td>Interview API base URL and auth (if any)</td><td><code>INTERVIEW_BASE_URL</code> (default <code>https://interview.reqruit.ai</code>), <code>QRUIT_INTERVIEW_MOCK=false</code></td><td>Endpoints used: <code>POST /v2/interview/start</code>, <code>POST /v2/interview/next</code>, <code>GET /v2/interview/session/{id}</code>, <code>GET /v2/interview/session/{id}/report</code>. Inputs are passed as URLs (<code>jd_source</code>, <code>resume_source</code>, <code>deep_screen_source</code>).</td></tr>
+    <tr><td class="id">RQ-3</td><td>Reqruit.ai must be able to fetch QRUIT's files</td><td><code>QRUIT_PUBLIC_BASE_URL</code></td><td>Both APIs download inputs from tokenised URLs of the form <code>{public host}/public/files/{token}</code>. This is why a stable public host (§11) is a hard dependency for going live, and why DOCX rendition is produced for every file.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─────────────────── 9 ─────────────────── -->
+<h2 id="s10">10. Local and shared folders, manual uploads</h2>
+<p><code>LocalFolderChannel</code> (<code>backend/app/channels/local_folder.py</code>) needs no credentials: it reads folders the QRUIT process can access, offers <code>browse()</code> with content-based JD/CV detection, and writes an outbox copy of every sent message for audit. It is also the stand-in used for every other channel until real credentials exist. Manual uploads (drag-and-drop in the console, <code>POST /api/uploads</code>) go through the same pipeline.</p>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>How to obtain it / details</th></tr></thead>
+  <tbody>
+    <tr><td class="id">LF-1</td><td>Folder paths to expose</td><td><code>backend/config.yaml → sources.&lt;id&gt;.paths</code></td><td>Absolute paths or paths relative to <code>backend/</code>. For a network share, mount it on the QRUIT host (SMB/NFS) and grant the service account read access; use the mounted path.</td></tr>
+    <tr><td class="id">LF-2</td><td>Supported file types</td><td>—</td><td><code>.docx .doc .pdf .txt .md .png .jpg .jpeg .tif</code>; images need Tesseract for OCR (<code>pip install -e ".[ocr]"</code> + the Tesseract binary).</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─────────────────── 10 ─────────────────── -->
+<h2 id="s11">11. Public host, network and secrets</h2>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:22%">Item</th><th style="width:20%">Goes into</th><th>Details</th></tr></thead>
+  <tbody>
+    <tr><td class="id">NW-1</td><td><strong>Stable public HTTPS host</strong> for QRUIT</td><td><code>QRUIT_PUBLIC_BASE_URL</code>; also the redirect URIs in GM-3 / MS-1</td><td>e.g. <code>https://qruit.&lt;domain&gt;</code> with a valid certificate, proxied to the backend on port 8787. Needed for: Reqruit.ai file fetches, candidate interview links (<code>/interview/{token}</code>), OAuth redirects, and the WhatsApp webhook if enabled. Replaces the temporary Cloudflare quick tunnel used in development (whose URL changes on every restart).</td></tr>
+    <tr><td class="id">NW-2</td><td>Outbound allow-list from the QRUIT host</td><td>Firewall / proxy</td><td><code>accounts.google.com</code>, <code>oauth2.googleapis.com</code>, <code>gmail.googleapis.com</code>, <code>www.googleapis.com</code>, <code>openidconnect.googleapis.com</code>, <code>login.microsoftonline.com</code>, <code>graph.microsoft.com</code>, <code>graph.facebook.com</code> (+ <code>lookaside.fbsbx.com</code> for WhatsApp media), <code>deep-screening.reqruit.ai</code>, <code>interview.reqruit.ai</code>, <code>api.openai.com</code>, the Postgres host on 5432.</td></tr>
+    <tr><td class="id">NW-3</td><td>Inbound exposure</td><td>Reverse proxy</td><td>Only <code>/public/*</code>, <code>/interview/*</code> (and <code>/webhooks/*</code> if used) need to be reachable from the internet. <code>/api/*</code> should stay on the office network/VPN; QRUIT already rejects <code>/api</code> requests that arrive via the public host name.</td></tr>
+    <tr><td class="id">SC-1</td><td>Secrets hand-over channel</td><td>—</td><td>Client secrets and tokens are shared through a vault or password-manager share, never by e-mail or chat. On the host they live only in <code>backend/.env</code> (git-ignored).</td></tr>
+    <tr><td class="id">SC-2</td><td>Server secret for token encryption</td><td><code>QRUIT_APPROVAL_SECRET</code></td><td>A long random string (e.g. <code>python -c "import secrets; print(secrets.token_urlsafe(48))"</code>). It keys the Fernet encryption of stored OAuth tokens and signs approval tokens; changing it invalidates all stored connections.</td></tr>
+    <tr><td class="id">SC-3</td><td>Rotation calendar</td><td>—</td><td>MS-2 secret expiry, WA-4 token, RQ-1 token. Name an owner for each.</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─────────────────── 11 ─────────────────── -->
+<h2 id="s12">12. Choices that change the setup</h2>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:5%">ID</th><th style="width:24%">Choice</th><th style="width:34%">Options</th><th>Recommendation and impact</th></tr></thead>
+  <tbody>
+    <tr><td class="id">C1</td><td>Which mailbox identity connects</td><td>(a) a named recruiter · (b) a dedicated user mailbox · (c) a shared mailbox</td><td><strong>(b)</strong>. Works with the current <code>/me</code>-based connectors and keeps the audit trail clean. (c) needs <code>Mail.Read.Shared</code>/<code>Mail.Send.Shared</code> and a small connector change.</td></tr>
+    <tr><td class="id">C2</td><td>Delegated vs unattended authentication</td><td>(a) sign-in once with refresh tokens (implemented) · (b) Google service account with domain-wide delegation + Entra application permissions (client-credentials flow)</td><td><strong>(a) now, (b) later.</strong> (b) removes the risk of expired refresh tokens and suits a fully autonomous agent, but needs code changes (JWT assertion / client-credentials token acquisition) and broader admin trust; Microsoft's least-privilege variant is application permission <code>Sites.Selected</code> granted to one site.</td></tr>
+    <tr><td class="id">C3</td><td>WhatsApp inbound</td><td>(a) send-only · (b) receive CVs and commands via webhook</td><td><strong>(a) for the pilot.</strong> (b) is the one background listener the architecture otherwise avoids; add it once clients demonstrably reply on WhatsApp.</td></tr>
+    <tr><td class="id">C4</td><td>Where files live on Drive / SharePoint</td><td>(a) My Drive / OneDrive folders · (b) Google shared drives / SharePoint team-site libraries</td><td>Either works; (b) on Google needs the <code>supportsAllDrives</code> parameters and a shared-drive ID; (b) on SharePoint needs the site ID (SP-1).</td></tr>
+  </tbody>
+</table>
+</div>
+
+<!-- ─────────────────── 12 ─────────────────── -->
+<h2 id="s13">13. Complete checklist and configuration map</h2>
+<h3>Checklist</h3>
+<p class="small">Priority: <span class="pill p0">P0</span> blocks the first live pull · <span class="pill p1">P1</span> needed before a client pilot · <span class="pill p2">P2</span> hardening / later phase.</p>
+<div class="wrap">
+<table>
+  <thead><tr><th style="width:12%">IDs</th><th>Item</th><th style="width:10%">Priority</th><th style="width:26%">Unblocks</th></tr></thead>
+  <tbody>
+    <tr><td class="id">NW-1, SC-1, SC-2</td><td>Public host, secrets channel, server secret</td><td><span class="pill p0">P0</span></td><td>Everything live</td></tr>
+    <tr><td class="id">RQ-1</td><td>Reqruit.ai deep-screening token</td><td><span class="pill p0">P0</span></td><td>Modules 1–2</td></tr>
+    <tr><td class="id">GM-1 → GM-3, GM-5</td><td>Google project, Internal consent screen, Web client, mailbox</td><td><span class="pill p0">P0</span></td><td>Gmail + Drive</td></tr>
+    <tr><td class="id">GD-2</td><td>Drive folder IDs shared with the mailbox</td><td><span class="pill p0">P0</span></td><td>Drive browse/pull</td></tr>
+    <tr><td class="id">MS-1 → MS-3, MS-5</td><td>Entra app, secret, admin-consented permissions, mailbox</td><td><span class="pill p0">P0</span></td><td>Outlook + SharePoint</td></tr>
+    <tr><td class="id">SP-1 → SP-3</td><td>Site ID, folder path, read access</td><td><span class="pill p0">P0</span></td><td>SharePoint browse/pull</td></tr>
+    <tr><td class="id">NW-2, NW-3</td><td>Allow-lists</td><td><span class="pill p0">P0</span></td><td>All calls from the production host</td></tr>
+    <tr><td class="id">GM-4, MS-4</td><td>Workspace API-controls trust; Conditional Access review</td><td><span class="pill p1">P1</span></td><td>Reliable unattended operation</td></tr>
+    <tr><td class="id">RQ-2</td><td>Interview API credentials</td><td><span class="pill p1">P1</span></td><td>Module 3</td></tr>
+    <tr><td class="id">WA-1 → WA-5, WA-8</td><td>WABA, number, permanent token, templates, test recipients</td><td><span class="pill p1">P1</span></td><td>WhatsApp send</td></tr>
+    <tr><td class="id">AL-1 → AL-4</td><td>Sender mailbox with send scope, <code>QRUIT_EMAIL_MOCK=false</code>, registered client/notification addresses, SPF/DKIM/DMARC</td><td><span class="pill p1">P1</span></td><td>E-mail alerts reach clients and candidates</td></tr>
+    <tr><td class="id">GM-6</td><td>Gmail label/filter convention</td><td><span class="pill p1">P1</span></td><td>Faster, cleaner pulls</td></tr>
+    <tr><td class="id">SC-3</td><td>Rotation calendar and owners</td><td><span class="pill p2">P2</span></td><td>Operations</td></tr>
+    <tr><td class="id">C2-b, WA-6/7, SP-4</td><td>Unattended auth, WhatsApp inbound, non-default libraries</td><td><span class="pill p2">P2</span></td><td>Later phases</td></tr>
+  </tbody>
+</table>
+</div>
+
+<h3>Configuration map (<code>backend/.env</code>)</h3>
+<pre># Google Workspace (Gmail + Drive)          → GM-3, GD-2
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+GOOGLE_DRIVE_FOLDER_ID=            # optional default folder
+
+# Microsoft 365 (Outlook + SharePoint)      → MS-1, MS-2, SP-1, SP-2
+MS_CLIENT_ID=
+MS_CLIENT_SECRET=
+MS_TENANT=                         # Directory (tenant) ID
+SHAREPOINT_SITE_ID=                # empty = signed-in user's OneDrive
+SHAREPOINT_FOLDER_PATH=
+
+# WhatsApp Cloud API                        → WA-2, WA-4
+WHATSAPP_MOCK=false
+WHATSAPP_TOKEN=
+WHATSAPP_PHONE_ID=
+
+# Reqruit.ai                                → RQ-1, RQ-2
+QRUIT_MOCK_API=false
+REQRUIT_AUTH_TOKEN=
+REQRUIT_BASE_URL=https://deep-screening.reqruit.ai
+QRUIT_INTERVIEW_MOCK=false
+INTERVIEW_BASE_URL=https://interview.reqruit.ai
+
+# Host and secrets                          → NW-1, SC-2
+QRUIT_PUBLIC_BASE_URL=https://qruit.example.com
+QRUIT_APPROVAL_SECRET=
+QRUIT_EMAIL_MOCK=false             # route mail through the connected mailbox</pre>
+<p class="small">Redirect URI registered on both OAuth apps: <code>{QRUIT_PUBLIC_BASE_URL}/api/oauth/callback</code> (production) and <code>http://localhost:8787/api/oauth/callback</code> (development). The console shows each connector's status on the Channels page; <em>Disconnect</em> deletes the stored token, and revoking the grant on the provider side has the same effect.</p>
+
+<footer>QRUIT engineering · Connector dependencies · 1 September 2026. Acceptance steps in §3–§8 take about 20 minutes per platform with one admin present.</footer>
+
+</div>
+</body>
+</html>

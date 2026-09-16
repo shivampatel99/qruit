@@ -1,0 +1,14 @@
+.env
+Resume.pdf
+__pycache__/
+*.pyc
+.pytest_cache/
+venv/
+.venv/
+data/outbox/*
+data/files/*
+data/uploads/*
+data/reports/*
+data/local_sources/*
+data/qruit.db
+!data/outbox/.gitkeep

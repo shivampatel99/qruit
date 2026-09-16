@@ -1,0 +1,27 @@
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+httpx==0.28.1
+cryptography==44.0.0
+python-docx==1.1.2
+pypdf==5.1.0
+fpdf2==2.8.2
+
+# production hardening (see QRUIT_CLAUDE_CODE_LOOP.md)
+sqlalchemy==2.0.36
+psycopg[binary]==3.2.3
+alembic==1.14.0
+arq==0.26.3
+redis==5.2.1
+async-timeout==4.0.3
+tenacity==9.0.0
+structlog==24.4.0
+prometheus-client==0.21.1
+
+pytest==8.3.4
+pytest-asyncio==0.25.2
+pytest-postgresql==6.1.1
+fakeredis==2.26.2
+respx==0.22.0
+locust==2.32.4
