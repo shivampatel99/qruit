@@ -6,9 +6,10 @@ import httpx
 import pytest
 import respx
 
-from app.connectors.gmail import API_BASE, GmailChannel
+from app.connectors.gmail import API_BASE, TOKEN_URL, GmailChannel
 from app.connectors.oauth_base import TokenBlob
 from app.crypto import ApprovalTokenSigner, TokenCipher
+from app.models import AuthState
 
 
 def _live_gmail(settings, storage):
@@ -75,3 +76,28 @@ async def test_pull_gives_up_after_max_attempts_on_persistent_5xx(settings, cont
         await connector.pull(query="has:attachment")
 
     assert route.call_count == 3  # with_backoff()'s default max_attempts
+
+
+@pytest.mark.respx(base_url=API_BASE)
+async def test_auth_status_reports_needs_auth_when_refresh_token_is_dead(settings, container, respx_mock):
+    """Loop-doc scenario: Google's 7-day External-app test-mode limit kills
+    the refresh token silently — the access token still looks fine locally
+    (right scopes, not near its own short expiry check unless we force it),
+    so auth_status() must actually attempt a refresh to notice, not just
+    check what's stored (see oauth_base.py::OAuthConnector.auth_status)."""
+    connector, _ = _live_gmail(settings, container.storage)
+    await connector.store_token(
+        TokenBlob(
+            access_token="tok", refresh_token="dead-refresh-token",
+            expires_at=time.time() - 1,  # already "expired" so access_token() refreshes right away
+            scopes=connector.required_scopes, account_label="a@b.example",
+        )
+    )
+    respx_mock.post(TOKEN_URL).mock(
+        return_value=httpx.Response(400, json={"error": "invalid_grant"})
+    )
+
+    status = await connector.auth_status()
+
+    assert status.state == AuthState.NEEDS_AUTH
+    assert "reconnect" in status.reason.lower()

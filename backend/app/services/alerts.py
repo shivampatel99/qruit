@@ -183,6 +183,28 @@ class DeliveryService:
             provider_message_id=result.provider_message_id, error=result.error,
         )
 
+    async def send_system_alert(self, subject: str, body: str, recipient: str) -> AlertSendOutcome:
+        """Not tied to a Role — used for system-level notices like "this
+        connector needs reauthorizing." Picks whichever mail connector is
+        currently READY (falls back automatically if the one that broke
+        happens to be the one this alert is about)."""
+        connector = await self._pick_connector(is_phone=False)
+        if connector is None:
+            await self._audit("", "none", "system_alert", recipient, "failed", error="no ready connector to send from")
+            return AlertSendOutcome(sent=False, error="no connected mailbox ready to send")
+
+        message = OutboundMessage(
+            channel=connector.name, recipient=recipient, subject=subject, body_text=body,
+            template_name="system_alert", approval_token=self.signer.issue("", "system_alert"),
+            role_id="", alert_type="system_alert",
+        )
+        result = await connector.send(message)
+        await self._audit(
+            "", connector.name, "system_alert", recipient, "sent" if result.success else "failed",
+            provider_message_id=result.provider_message_id, error=result.error,
+        )
+        return AlertSendOutcome(sent=result.success, error=result.error, provider_message_id=result.provider_message_id)
+
     async def _pick_connector(self, is_phone: bool) -> Connector | None:
         if is_phone:
             whatsapp = self.registry.get("whatsapp")

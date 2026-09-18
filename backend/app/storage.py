@@ -132,6 +132,15 @@ SCHEMA_STATEMENTS = [
         created_at TEXT NOT NULL
     )
     """,
+    """
+    CREATE TABLE IF NOT EXISTS connector_configs (
+        channel TEXT PRIMARY KEY,
+        encrypted_config TEXT NOT NULL DEFAULT '',
+        notify_email TEXT NOT NULL DEFAULT '',
+        last_reauth_alert_at TEXT NOT NULL DEFAULT '',
+        updated_at TEXT NOT NULL
+    )
+    """,
 ]
 
 
@@ -569,6 +578,13 @@ class Storage:
                 },
             )
 
+    async def delete_channel_account(self, channel: str, account_key: str) -> None:
+        async with self.engine.begin() as conn:
+            await conn.execute(
+                text("DELETE FROM channel_accounts WHERE channel = :channel AND account_key = :account_key"),
+                {"channel": channel, "account_key": account_key},
+            )
+
     async def get_channel_account(self, channel: str, account_key: str) -> dict | None:
         async with self.engine.begin() as conn:
             result = await conn.execute(
@@ -584,6 +600,59 @@ class Storage:
             "granted_scopes": _json_loads(row["granted_scopes"]),
             "account_label": row["account_label"],
         }
+
+    # -- connector configs (client credentials submitted via the API,
+    # distinct from channel_accounts which stores the resulting OAuth token) -
+
+    async def save_connector_config(
+        self, channel: str, encrypted_config: str, notify_email: str = "",
+    ) -> None:
+        from app.models import utcnow
+
+        async with self.engine.begin() as conn:
+            await conn.execute(
+                text(
+                    """
+                    INSERT INTO connector_configs (channel, encrypted_config, notify_email, updated_at)
+                    VALUES (:channel, :encrypted_config, :notify_email, :updated_at)
+                    ON CONFLICT(channel) DO UPDATE SET
+                        encrypted_config=excluded.encrypted_config,
+                        notify_email=excluded.notify_email,
+                        updated_at=excluded.updated_at
+                    """
+                ),
+                {
+                    "channel": channel, "encrypted_config": encrypted_config,
+                    "notify_email": notify_email, "updated_at": utcnow().isoformat(),
+                },
+            )
+
+    async def get_connector_config(self, channel: str) -> dict | None:
+        async with self.engine.begin() as conn:
+            result = await conn.execute(
+                text("SELECT * FROM connector_configs WHERE channel = :channel"), {"channel": channel}
+            )
+            row = result.mappings().fetchone()
+        return dict(row) if row else None
+
+    async def list_connector_configs(self) -> list[dict]:
+        async with self.engine.begin() as conn:
+            result = await conn.execute(text("SELECT * FROM connector_configs"))
+            rows = result.mappings().fetchall()
+        return [dict(row) for row in rows]
+
+    async def delete_connector_config(self, channel: str) -> None:
+        async with self.engine.begin() as conn:
+            await conn.execute(text("DELETE FROM connector_configs WHERE channel = :channel"), {"channel": channel})
+
+    async def mark_reauth_alert_sent(self, channel: str) -> None:
+        from app.models import utcnow
+
+        async with self.engine.begin() as conn:
+            await conn.execute(
+                text("UPDATE connector_configs SET last_reauth_alert_at = :at WHERE channel = :channel"),
+                {"at": utcnow().isoformat(), "channel": channel},
+            )
 
     # -- OAuth CSRF state (issued by /connect, consumed once by /callback) ---
 

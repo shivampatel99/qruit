@@ -11,6 +11,7 @@ from app.pipeline.ingestion import IngestionPipeline
 from app.pipeline.interview import InterviewPipeline
 from app.pipeline.screening import ScreeningPipeline
 from app.services.alerts import DeliveryService
+from app.services.connector_config import load_all_configs
 from app.services.jobs import JobQueue
 from app.services.reqruit_client import ReqruitClient, ReqruitInterviewProvider
 from app.storage import Storage
@@ -39,6 +40,7 @@ async def build_container(settings: Settings | None = None) -> Container:
     await storage.init_schema()
     cipher = TokenCipher(settings)
     signer = ApprovalTokenSigner(settings)
+    await load_all_configs(settings, storage, cipher)
     registry = ConnectorRegistry(settings, storage)
     reqruit = ReqruitClient(settings)
     interview_provider = ReqruitInterviewProvider(settings)

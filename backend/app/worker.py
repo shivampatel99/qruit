@@ -1,12 +1,17 @@
 from __future__ import annotations
 
+import datetime as dt
+
 from arq.connections import RedisSettings
+from arq.cron import cron
 
 from app.bootstrap import build_container
 from app.config import Settings, get_settings
-from app.models import RoleStatus
+from app.models import AuthState, RoleStatus, utcnow
 from app.services import report as report_service
 from app.services.alerts import AlertType
+
+REAUTH_ALERT_COOLDOWN = dt.timedelta(hours=24)
 
 # Tests point the worker at their own ephemeral Postgres/Redis by seeding the
 # Worker's ctx with {"settings": <test Settings>} at construction time (see
@@ -120,11 +125,51 @@ async def approve_report(ctx: dict, role_id: str) -> dict:
     return {"sent": outcome.sent, "error": outcome.error, "report_path": dest}
 
 
+async def check_channel_health(ctx: dict) -> dict:
+    """Runs on a schedule (see WorkerSettings.cron_jobs): for each connector
+    that can actually go stale (Gmail/Outlook's OAuth refresh token dying,
+    e.g. Google's 7-day External-app test-mode limit), emails whoever's
+    configured as that channel's notify_email a fresh reconnect link —
+    at most once per REAUTH_ALERT_COOLDOWN so a still-broken channel
+    doesn't get re-alerted every 30 minutes."""
+    from app.api.oauth import build_authorize_url  # local import: avoids a worker<->api import cycle at module load
+
+    container = ctx["container"]
+    alerted = []
+    for channel in ("gmail", "outlook"):
+        status = await container.registry.get(channel).auth_status()
+        if status.state != AuthState.NEEDS_AUTH:
+            continue
+
+        config = await container.storage.get_connector_config(channel)
+        notify_email = config["notify_email"] if config else ""
+        if not notify_email:
+            continue
+        last_sent = config.get("last_reauth_alert_at") or ""
+        if last_sent and utcnow() - dt.datetime.fromisoformat(last_sent) < REAUTH_ALERT_COOLDOWN:
+            continue
+
+        authorize_url = await build_authorize_url(channel, container)
+        outcome = await container.delivery.send_system_alert(
+            subject=f"QRUIT: {channel} needs reconnecting",
+            body=(
+                f"QRUIT's connection to {channel} has stopped working ({status.reason}).\n\n"
+                f"Click this link to reconnect it:\n{authorize_url}\n\n— QRUIT"
+            ),
+            recipient=notify_email,
+        )
+        if outcome.sent:
+            await container.storage.mark_reauth_alert_sent(channel)
+            alerted.append(channel)
+    return {"alerted": alerted}
+
+
 class WorkerSettings:
     functions = [
         ping, pull_for_role, run_screening, check_replies,
         start_interviews, poll_interviews, approve_report,
     ]
+    cron_jobs = [cron(check_channel_health, minute={0, 30})]
     queue_name = get_settings().arq_queue_name
     on_startup = startup
     on_shutdown = shutdown

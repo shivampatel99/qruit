@@ -38,6 +38,18 @@ def settings(tmp_path, postgresql):
         # (it's the real local instance) — a unique queue name per test keeps
         # jobs from one test invisible to the next.
         arq_queue_name=f"test:{uuid.uuid4().hex}",
+        # Explicitly blank every provider credential field rather than
+        # relying on a clean environment — a developer's real backend/.env
+        # (needed to test live connectors, see RUNBOOK.md) would otherwise
+        # leak real values into every test via pydantic-settings' env_file
+        # loading, silently breaking test isolation (a connector reporting
+        # `ready`/mock fallback based on real .env content, not the test's
+        # own setup).
+        google_client_id="", google_client_secret="", google_drive_folder_id="",
+        ms_client_id="", ms_client_secret="", ms_tenant="",
+        sharepoint_site_id="", sharepoint_folder_path="",
+        whatsapp_token="", whatsapp_phone_id="", whatsapp_app_secret="",
+        reqruit_auth_token="",
     )
 
 

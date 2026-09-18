@@ -20,6 +20,11 @@ class AuthStatus(BaseModel):
     state: AuthState
     reason: str = ""
     account_label: str = ""
+    # True when `state == ready` only because no real credentials are
+    # configured yet and the connector fell back to safe mock data (so the
+    # pipeline stays testable without live accounts) — not a real connection.
+    # A production UI should show this as "not connected," not green.
+    mock: bool = False
 
 
 class InboundItem(BaseModel):

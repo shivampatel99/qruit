@@ -98,7 +98,7 @@ class WhatsAppChannel(Connector):
 
     async def auth_status(self) -> AuthStatus:
         if self._mock_active():
-            return AuthStatus(state=AuthState.READY, account_label="mock-whatsapp-business-number")
+            return AuthStatus(state=AuthState.READY, account_label="mock-whatsapp-business-number", mock=True)
         if not self.settings.whatsapp_token or not self.settings.whatsapp_phone_id:
             return AuthStatus(
                 state=AuthState.ERROR,

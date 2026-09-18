@@ -25,6 +25,19 @@ class CallbackResult(BaseModel):
     error: str = ""
 
 
+async def build_authorize_url(channel: str, container: Container) -> str:
+    """Shared by the /connect route and the reauth-alert cron job (worker.py)
+    — both need a fresh, actually-usable authorize link, which means saving
+    the pending state so /callback will recognize it, not just building the URL."""
+    connector = container.registry.get(channel)
+    if not isinstance(connector, OAuthConnector):
+        raise ValueError(f"'{channel}' is not an OAuth connector")
+    redirect_uri = f"{container.settings.qruit_public_base_url}/api/oauth/callback"
+    authorize_url, state, verifier = connector.authorize_url(redirect_uri)
+    await container.storage.save_oauth_pending(state, channel, verifier, redirect_uri)
+    return authorize_url
+
+
 @router.get(
     "/{channel}/connect",
     response_model=ConnectResult,
@@ -33,14 +46,9 @@ class CallbackResult(BaseModel):
 async def connect(channel: str, container: Container = Depends(get_container)) -> ConnectResult:
     if channel not in CONNECTABLE:
         raise HTTPException(404, f"'{channel}' has no OAuth flow of its own — connect 'gmail' or 'outlook'")
-    connector = container.registry.get(channel)
-    if not isinstance(connector, OAuthConnector):
+    if not isinstance(container.registry.get(channel), OAuthConnector):
         raise HTTPException(404, f"'{channel}' is not an OAuth connector")
-
-    redirect_uri = f"{container.settings.qruit_public_base_url}/api/oauth/callback"
-    authorize_url, state, verifier = connector.authorize_url(redirect_uri)
-    await container.storage.save_oauth_pending(state, channel, verifier, redirect_uri)
-    return ConnectResult(authorize_url=authorize_url)
+    return ConnectResult(authorize_url=await build_authorize_url(channel, container))
 
 
 @router.get(

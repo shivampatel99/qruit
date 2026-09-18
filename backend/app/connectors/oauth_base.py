@@ -131,6 +131,18 @@ class OAuthConnector:
                 reason=f"reconnect to grant permission: {', '.join(missing)}",
                 account_label=blob.account_label,
             )
+        try:
+            # A stored token can look fine locally (right scopes, not yet
+            # near its local expiry) while the provider has already killed
+            # the refresh token behind it — e.g. Google's 7-day External-app
+            # test-mode limit. Only an actual refresh attempt reveals that.
+            await self.access_token()
+        except httpx.HTTPStatusError:
+            return AuthStatus(
+                state=AuthState.NEEDS_AUTH,
+                reason="reconnect — the provider rejected the refresh (token expired or access was revoked)",
+                account_label=blob.account_label,
+            )
         return AuthStatus(state=AuthState.READY, account_label=blob.account_label)
 
     @staticmethod

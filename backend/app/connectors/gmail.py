@@ -154,7 +154,7 @@ class GmailChannel(OAuthConnector, Connector):
 
     async def auth_status(self) -> AuthStatus:
         if self._mock_active():
-            return AuthStatus(state=AuthState.READY, account_label="mock-gmail@qruit.local")
+            return AuthStatus(state=AuthState.READY, account_label="mock-gmail@qruit.local", mock=True)
         return await super().auth_status()
 
     async def pull(self, query: str = "", limit: int = 25, folder: str = "") -> list[InboundItem]:
