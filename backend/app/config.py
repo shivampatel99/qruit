@@ -11,6 +11,9 @@ class Settings(BaseSettings):
 
     qruit_approval_secret: str = "dev-only-insecure-secret-change-me"
     qruit_public_base_url: str = "http://localhost:8787"
+    # Comma-separated list of origins allowed to call the API from a browser
+    # (the frontend's URL). Dev default matches `npm run dev`'s Vite port.
+    cors_allowed_origins: str = "http://localhost:5173"
     qruit_data_dir: Path = BACKEND_ROOT / "data"
 
     qruit_email_mock: bool = True

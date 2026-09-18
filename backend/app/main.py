@@ -76,12 +76,15 @@ app = FastAPI(
 
 app.add_middleware(RequestIDMiddleware)
 app.add_middleware(PublicHostnameGuardMiddleware, public_hostname=_public_hostname(_settings.qruit_public_base_url))
-# Dev-only: lets the Vite frontend (a different origin) call this API directly.
-# These routes already have no auth of their own yet (deliberate, discussed
-# with the client) — scoped to the dev server's origin, not "*", so this
-# doesn't widen exposure any further than developing the frontend needs.
+# Lets the frontend (a different origin) call this API directly. These
+# routes already have no auth of their own yet (deliberate, discussed with
+# the client) — scoped to CORS_ALLOWED_ORIGINS, not "*", so this doesn't
+# widen exposure any further than the frontend actually needs.
 app.add_middleware(
-    CORSMiddleware, allow_origins=["http://localhost:5173"], allow_methods=["*"], allow_headers=["*"],
+    CORSMiddleware,
+    allow_origins=[o.strip() for o in _settings.cors_allowed_origins.split(",") if o.strip()],
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # /api/* — internal network/VPN only, never internet-facing (FRD §5.6).
